@@ -15,6 +15,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -30,14 +31,14 @@ public class LibsvmToCSV {
     public static Map<String, Integer> countCityFeatureMap = Maps.newHashMap();
     public static Double maxModel=1.0;
     public static Double maxCity=1.0;
-
+    public static String baseDir ="";
     public static void main(String[] args) throws IOException {
         // String baseDir = "/home/zhipengwu/Innovation/BigBang/JavaTutorial/src/main/resources/";
         // // 输入文件名称参数
         // String inputFileName = "hotel_train_20170813.libsvm";
         // String libsvmDescFile = baseDir + "libsvm格式说明20170813.txt"; // libsvm列名文件
 
-        String baseDir = args[0];
+        baseDir = args[0];
         // 输入文件名称参数
         String inputFileName = args[1];
         String libsvmDescFile = baseDir + args[2]; // libsvm列名文件
@@ -401,6 +402,14 @@ public class LibsvmToCSV {
                 }
 
             }
+            //输出统计的机型及热度
+            Set<String> strings = countModelFeatureMap.keySet();
+            FileWriter fw=new FileWriter(baseDir+"model_frequency.txt");
+            for (String model:strings){
+                fw.append(String.format("%s\t%s\n",model,countModelFeatureMap.get(model)));
+                fw.flush();
+            }
+            fw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
