@@ -26,6 +26,10 @@ public class LibsvmToCSV {
     public static Map<String, Integer> featurNametoIndexMap;
     // 计算分类特征出现频次最高的条目
     public static Map<String, Integer> countCategoryFeatureMap = Maps.newHashMap();
+    public static Map<String, Integer> countModelFeatureMap = Maps.newHashMap();
+    public static Map<String, Integer> countCityFeatureMap = Maps.newHashMap();
+    public static Double maxModel=1.0;
+    public static Double maxCity=1.0;
 
     public static void main(String[] args) throws IOException {
         // String baseDir = "/home/zhipengwu/Innovation/BigBang/JavaTutorial/src/main/resources/";
@@ -44,7 +48,7 @@ public class LibsvmToCSV {
         String outputFile = baseDir + outputFileName;
         int dim = 29; // 转换后的维数
         FileWriter csvFile = new FileWriter(outputFile);
-        String header = "Label,I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I12,I13,I14,I15,I16,I17,I18,I19,I20,I21,I22,I23,I24,I25,I26,I27,I28,I29,C1,C2,C3";
+        String header = "Label,I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I12,I13,I14,I15,I16,I17,I18,I19,I20,I21,I22,I23,I24,I25,I26,I27,I28,I29,I30,C1,C2,C3";
         if (addHeader) {
             csvFile.append(header + "\n");
             csvFile.flush();
@@ -62,6 +66,9 @@ public class LibsvmToCSV {
         csv_colum_name_desc.flush();
         csv_colum_name_desc.close();
 
+        //========统计分类特征(城市和model)出现频次======
+        countCategoryFeatureFrequency(inputFile,libsvmDesMap, featurNametoIndexMap, dim);
+
         LineIterator lineIterator = FileUtils.lineIterator(new File(inputFile));
         while (lineIterator.hasNext()) {
             String line = lineIterator.nextLine();
@@ -69,8 +76,8 @@ public class LibsvmToCSV {
             // ===========生成gbdt的输入特征==========
             rowList = createFeartureforGBDT(rowList);
 
-            //==========对特征中的某些列做归一化处理====
-            rowList=normalizeFeature(rowList);
+            // ==========对特征中的某些列做归一化处理====
+//            rowList = normalizeFeature(rowList);
 
             String csvrow = rowList.toString();
 
@@ -78,10 +85,6 @@ public class LibsvmToCSV {
             if (csvrow.endsWith(",")) {
                 csvrow = csvrow.substring(0, csvrow.length() - 1);
             }
-            // csvrow=csvrow.replaceAll("\\[","");
-            // csvrow=csvrow.replaceAll("\\]","");
-            // csvrow=csvrow.replaceAll("\\(","");
-            // csvrow=csvrow.replaceAll("\\)","");
             csvFile.append(csvrow + "\n");
             // System.out.println(rowList.toString());
         }
@@ -95,7 +98,8 @@ public class LibsvmToCSV {
         Map<String, Integer> stringIntegerMap = sortByValue(countCategoryFeatureMap);
         for (String key : stringIntegerMap.keySet()) {
             // System.out.println(key+"\t"+stringIntegerMap.get(key));
-            if (stringIntegerMap.get(key) > 1000) {
+            int va=stringIntegerMap.get(key);
+            if (va > 100) {
                 high_frequence.append(key + "\t" + stringIntegerMap.get(key) + "\n");
             }
         }
@@ -234,23 +238,12 @@ public class LibsvmToCSV {
         String platform = rowList.get(platformIndex);
         String model = rowList.get(modelIndex);
         String allCity = rowList.get(allCityIndex);
+        String[] cities = allCity.split("#");
         String formate_model = "model-" + rowList.get(modelIndex);
         String formate_allCity = "allCity-" + rowList.get(allCityIndex);
-        if (countCategoryFeatureMap.containsKey(formate_model)) {
-            Integer integer = countCategoryFeatureMap.get(formate_model);
-            integer++;
-            countCategoryFeatureMap.put(formate_model, integer);
-        } else {
-            countCategoryFeatureMap.put(formate_model, 1);
-        }
-
-        if (countCategoryFeatureMap.containsKey(formate_allCity)) {
-            Integer integer = countCategoryFeatureMap.get(formate_allCity);
-            integer += 1;
-            countCategoryFeatureMap.put(formate_allCity, integer);
-        } else {
-            countCategoryFeatureMap.put(formate_allCity, 1);
-        }
+        // 统计用户所有移动的城市的热度之和手机机型热度
+        addMap(formate_model,countCategoryFeatureMap);
+        addMap(formate_allCity,countCategoryFeatureMap);
 
         for (int i = 0; i < rowList.size(); i++) {
             String s = rowList.get(i);
@@ -300,13 +293,27 @@ public class LibsvmToCSV {
             rowList.set(i, value);
         }
 
-        // rowList.remove(platformIndex);
-        // rowList.remove(modelIndex);
-        // rowList.remove(allCityIndex);
-
+        //根据计算的城市和机型热度更新对应列
+        if (countModelFeatureMap.get(model)>0) {
+            rowList.set(modelIndex, dcmFmt.format((10*countModelFeatureMap.get(model))/maxModel));
+        }
+        rowList.add(MD5Util.getMd5(model));
         rowList.add(platform);
         rowList.add(model);
         rowList.add(allCity);
+
+        Double citySum=0.0;
+        int tempmaxCity=0;
+        String tempmaxCityname="";
+        for (String city : cities) {
+            citySum+=countCityFeatureMap.get(city);
+            if (countCityFeatureMap.get(city)>tempmaxCity){
+                tempmaxCity=countCityFeatureMap.get(city);
+                tempmaxCityname=city;
+            }
+        }
+        rowList.set(allCityIndex,dcmFmt.format((citySum*10)/maxCity));
+        rowList.set(platformIndex,MD5Util.getMd5(tempmaxCityname));
         return rowList;
     }
 
@@ -329,29 +336,78 @@ public class LibsvmToCSV {
         return result;
     }
 
-    //对输入特征中的某些列做归一化处理
-    public  static List<String> normalizeFeature(List<String> rowList){
-            //将分布比较集中的特征进行对数处理
+    // 对输入特征中的某些列做归一化处理
+    public static List<String> normalizeFeature(List<String> rowList) {
+        // 将分布比较集中的特征进行对数处理
         DecimalFormat dcmFmt = new DecimalFormat("0.00");
-        String featureNames="avgActiveRadiusOnWorkingDay0,avgActiveRadiusOnWorkingDay1,maxActiveRadiusOnWeekend1,maxActiveRadiusOnWeekend0,shiftCitysOnWeekend0,shiftCitysOnWeekend1,avgActiveRadiusOnWeekend1,avgActiveRadiusOnWeekend0,maxActiveRadiusOnWorkingDay0,maxActiveRadiusOnWorkingDay1,maxActiveRadius0,maxActiveRadius1,avgActiveRadius0,avgActiveRadius1,shiftCitysOnWorkingDay1,shiftCitysOnWorkingDay0,shiftCitys0";
+        String featureNames = "avgActiveRadiusOnWorkingDay0,avgActiveRadiusOnWorkingDay1,maxActiveRadiusOnWeekend1,maxActiveRadiusOnWeekend0,shiftCitysOnWeekend0,shiftCitysOnWeekend1,avgActiveRadiusOnWeekend1,avgActiveRadiusOnWeekend0,maxActiveRadiusOnWorkingDay0,maxActiveRadiusOnWorkingDay1,maxActiveRadius0,maxActiveRadius1,avgActiveRadius0,avgActiveRadius1,shiftCitysOnWorkingDay1,shiftCitysOnWorkingDay0,shiftCitys0";
         String[] features = featureNames.split(",");
-        for (String feature:features){
+        for (String feature : features) {
             Integer index = featurNametoIndexMap.get(feature);
-            if (index>-1&&index<rowList.size()){
+            if (index > -1 && index < rowList.size()) {
                 String value = rowList.get(index);
-                if (isNum(value)&&Double.valueOf(value)>0) {
+                if (isNum(value) && Double.valueOf(value) > 0) {
                     String format = dcmFmt.format(Math.log1p(Double.valueOf(value) * 10));
 
-                    int s = (int)( Double.valueOf(format)*100);
+                    int s = (int) (Double.valueOf(format) * 100);
 
-
-                    String result =String.valueOf(s);
-                    rowList.set(index,result);
+                    String result = String.valueOf(s);
+                    rowList.set(index, result);
                 }
 
             }
         }
         return rowList;
     }
+
+    public static void addMap(String key, Map<String, Integer> map) {
+        if (Strings.isNullOrEmpty(key) || map == null) {
+            return;
+        }
+        if (map.containsKey(key)) {
+            Integer integer = map.get(key);
+            map.put(key, integer + 1);
+        } else {
+            map.put(key, 1);
+        }
+    }
+
+    //统计分类特征分别出现的次数
+    public static void countCategoryFeatureFrequency(String inputFile,Map<Integer, LibsvmDes> libsvmDesMap,
+                                                     Map<String, Integer> featurNametoIndexMap, int dim){
+        LineIterator lineIterator = null;
+        try {
+            lineIterator = FileUtils.lineIterator(new File(inputFile));
+            while (lineIterator.hasNext()) {
+                String line = lineIterator.nextLine();
+                List<String> rowList = parseLine(line, libsvmDesMap, featurNametoIndexMap, dim);
+                Integer platformIndex = featurNametoIndexMap.get("platform");
+                Integer modelIndex = featurNametoIndexMap.get("model");
+                Integer allCityIndex = featurNametoIndexMap.get("allCity");
+                String platform = rowList.get(platformIndex);
+                String model = rowList.get(modelIndex);
+                String allCity = rowList.get(allCityIndex);
+                String[] cities = allCity.split("#");
+                // 统计用户所有移动的城市的热度之和手机机型热度
+                addMap(model, countModelFeatureMap);
+                if (countModelFeatureMap.get(model)>maxModel){
+                    maxModel=Double.valueOf(countModelFeatureMap.get(model));
+                }
+                for (String city : cities) {
+                    addMap(city, countCityFeatureMap);
+                    if (countCityFeatureMap.get(city)>maxCity){
+                        maxCity=Double.valueOf(countCityFeatureMap.get(city));
+                    }
+                }
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
 
 }
