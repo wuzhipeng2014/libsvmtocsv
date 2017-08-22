@@ -3,6 +3,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +26,8 @@ public class LibsvmToCSV {
     public static Logger logger = LoggerFactory.getLogger(LibsvmToCSV.class);
 
     public static Map<String, Integer> featurNametoIndexMap;
+    public static DecimalFormat dcmFmt = new DecimalFormat("0.00");
+
     // 计算分类特征出现频次最高的条目
     public static Map<String, Integer> countCategoryFeatureMap = Maps.newHashMap();
     public static Map<String, Integer> countModelFeatureMap = Maps.newHashMap();
@@ -38,18 +41,20 @@ public class LibsvmToCSV {
         // String inputFileName = "hotel_train_20170813.libsvm";
         // String libsvmDescFile = baseDir + "libsvm格式说明20170813.txt"; // libsvm列名文件
 
+        DateTime dateTime=DateTime.now();
+        String localDate = dateTime.toLocalDate().toString();
         baseDir = args[0];
         // 输入文件名称参数
         String inputFileName = args[1];
-        String libsvmDescFile = baseDir + args[2]; // libsvm列名文件
+        String libsvmDescFile =  baseDir + args[2]; // libsvm列名文件
         boolean addHeader = Boolean.valueOf(args[3]);
 
-        String outputFileName = inputFileName + ".csv";
+        String outputFileName = String.format("%s_%s%s",inputFileName,localDate,".csv");
         String inputFile = baseDir + inputFileName;
         String outputFile = baseDir + outputFileName;
         int dim = 29; // 转换后的维数
         FileWriter csvFile = new FileWriter(outputFile);
-        String header = "Label,I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I12,I13,I14,I15,I16,I17,I18,I19,I20,I21,I22,I23,I24,I25,I26,I27,I28,I29,I30,C1,C2,C3";
+        String header = "Label,I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I12,I13,I14,I15,I16,I17,I18,I19,I20,I21,I22,I23,I24,I25,I26,I27,I28,I29,I30,I31,I32,I33,C1,C2,C3";
         if (addHeader) {
             csvFile.append(header + "\n");
             csvFile.flush();
@@ -299,6 +304,13 @@ public class LibsvmToCSV {
             rowList.set(modelIndex, dcmFmt.format((10*countModelFeatureMap.get(model))/maxModel));
         }
         rowList.add(MD5Util.getMd5(model));
+
+        //================================================================================================
+        //添加其他数字特征(1. 周平均活跃天数,2. 工作日/节假日跨市移动最大比值,3. 最大活动半径/平均活动半径 最大比值)
+        addOtherFeature(rowList);
+        //================================================================================================
+
+        //添加分类特征
         rowList.add(platform);
         rowList.add(model);
         rowList.add(allCity);
@@ -313,7 +325,9 @@ public class LibsvmToCSV {
                 tempmaxCityname=city;
             }
         }
+        //城市热度特征
         rowList.set(allCityIndex,dcmFmt.format((citySum*10)/maxCity));
+        //城市名字MD5值
         rowList.set(platformIndex,MD5Util.getMd5(tempmaxCityname));
         return rowList;
     }
@@ -413,6 +427,51 @@ public class LibsvmToCSV {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    /**
+     * 添加其他特征, 包括(1. 周平均活跃天数,2. 最大活跃半径,3. 工作日/节假日跨市移动最大比值,4. 最大活动半径/平均活动半径 最大比值)
+     * @param rowList
+     */
+    public static void addOtherFeature(List<String> rowList){
+        Integer activeDaysIndex = featurNametoIndexMap.get("activeDays");
+        Integer activeWeeksIndex = featurNametoIndexMap.get("activeWeeks");
+        String activeDays = rowList.get(activeDaysIndex);
+        String activeWeeks = rowList.get(activeWeeksIndex);
+
+        //1.周平均活跃天数
+        String avgActiveDayPerWeek=dcmFmt.format(Double.valueOf(activeDays) /Double.valueOf(activeWeeks));
+
+        Integer avgActiveRadiusOnWorkingDay1Index = featurNametoIndexMap.get("avgActiveRadiusOnWorkingDay1");
+        Integer avgActiveRadiusOnWeekend1Index = featurNametoIndexMap.get("avgActiveRadiusOnWeekend1");
+        Integer maxActiveRadius1Index = featurNametoIndexMap.get("maxActiveRadius1");
+        Double avgActiveRadiusOnWorkingDay1 = Double.valueOf(rowList.get(avgActiveRadiusOnWorkingDay1Index));
+        Double avgActiveRadiusOnWeekend1 = Double.valueOf(rowList.get(avgActiveRadiusOnWeekend1Index));
+        Double maxActiveRadius1 = Double.valueOf( rowList.get(maxActiveRadius1Index));
+        double minAvgActiveRadius = Math.min(avgActiveRadiusOnWorkingDay1, avgActiveRadiusOnWeekend1);
+        if (minAvgActiveRadius<=0){
+            minAvgActiveRadius=1;
+        }
+        //2. 最大活动半径(工作日|节假日)平均移动半径最大比值
+        String maxActiveRadius=dcmFmt.format(maxActiveRadius1/minAvgActiveRadius);
+
+        Integer shiftCitysOnWeekend1Index = featurNametoIndexMap.get("shiftCitysOnWeekend1");
+        Integer shiftCitysOnWorkingDay1Index = featurNametoIndexMap.get("shiftCitysOnWorkingDay1");
+        Integer shiftCitys1Index = featurNametoIndexMap.get("shiftCitys1");
+        Double shiftCitysOnWeekend1 = Double.valueOf(rowList.get(shiftCitysOnWeekend1Index));
+        Double shiftCitysOnWorkingDay1 =Double.valueOf(rowList.get(shiftCitysOnWorkingDay1Index));
+        Double shiftCitys1 =Double.valueOf(rowList.get(shiftCitys1Index));
+        double min = Math.min(shiftCitysOnWeekend1, shiftCitysOnWorkingDay1);
+        if (min<=0){
+            min=1;
+        }
+        //3. 跨市移动次数/(节假日|工作日)跨市移动频次最大比值
+        String maxshiftCityRatio=String.valueOf(dcmFmt.format(shiftCitys1/min));
+
+        rowList.add(avgActiveDayPerWeek);
+        rowList.add(maxActiveRadius);
+        rowList.add(maxshiftCityRatio);
 
     }
 
