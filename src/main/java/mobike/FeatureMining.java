@@ -122,7 +122,7 @@ public class FeatureMining {
 
         if (split.length == 2) {
             doubleBean.number = split[0];
-            doubleBean.decimal = split[1];
+            doubleBean.decimal = String.format("0.%s",split[1]);
         }
         return doubleBean;
     }
