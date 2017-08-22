@@ -25,7 +25,7 @@ public class GeoHash {
 
     }
 
-    public double[] decode(String geohash) {
+    public static double[] decode(String geohash) {
         StringBuilder buffer = new StringBuilder();
         for (char c : geohash.toCharArray()) {
 
@@ -60,7 +60,7 @@ public class GeoHash {
         return new double[] {lat, lon};
     }
 
-    private double decode(BitSet bs, double floor, double ceiling) {
+    private static double decode(BitSet bs, double floor, double ceiling) {
         double mid = 0;
         for (int i=0; i<bs.length(); i++) {
             mid = (floor + ceiling) / 2;
@@ -73,7 +73,7 @@ public class GeoHash {
     }
 
 
-    public String encode(double lat, double lon) {
+    public static String encode(double lat, double lon) {
         BitSet latbits = getBits(lat, -90, 90);
         BitSet lonbits = getBits(lon, -180, 180);
         StringBuilder buffer = new StringBuilder();
@@ -84,7 +84,7 @@ public class GeoHash {
         return base32(Long.parseLong(buffer.toString(), 2));
     }
 
-    private BitSet getBits(double lat, double floor, double ceiling) {
+    private static BitSet getBits(double lat, double floor, double ceiling) {
         BitSet buffer = new BitSet(numbits);
         for (int i = 0; i < numbits; i++) {
             double mid = (floor + ceiling) / 2;
