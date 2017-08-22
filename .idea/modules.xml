@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Libsvmtocsv.iml" filepath="$PROJECT_DIR$/Libsvmtocsv.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mobike/mobike.iml" filepath="$PROJECT_DIR$/mobike/mobike.iml" />
     </modules>
   </component>
 </project>

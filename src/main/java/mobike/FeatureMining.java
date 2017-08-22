@@ -14,6 +14,7 @@ import java.io.IOException;
 
 /**
  * Created by zhipengwu on 17-8-18.
+ * mobike竞赛数据特征挖掘
  */
 public class FeatureMining {
 
@@ -36,7 +37,7 @@ public class FeatureMining {
 
     public static void main(String[] args) {
         String inputFile = "src/main/resources/mobike/train.csv";
-        String outputFile = "src/main/resources/mobike/fomat_train.csv";
+        String outputFile = "src/main/resources/mobike/fomat_train_lng.csv";
 //
 //        String inputFile = "src/main/resources/mobike/test.csv";
 //        String outputFile = "src/main/resources/mobike/fomat_test.csv";
@@ -76,11 +77,18 @@ public class FeatureMining {
                         DoubleBean end_lat_double_bean = splitDouble(end_lat);
                         double end_lng = decodeEnd[1];
                         DoubleBean end_lng_double_bean = splitDouble(end_lng);
-                        String format = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", split[1],
+//                        String format = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", split[1],
+//                                split[2], split[3], year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour,
+//                                secondOfMinute, start_lat_double_bean.number, start_lat_double_bean.decimal,
+//                                start_lng_double_bean.number, start_lng_double_bean.decimal, end_lat_double_bean.number,
+//                                end_lat_double_bean.decimal, end_lng_double_bean.number, end_lng_double_bean.decimal);
+                        //生成训练数据经度训练特征
+                        String format = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", split[1],
                                 split[2], split[3], year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour,
                                 secondOfMinute, start_lat_double_bean.number, start_lat_double_bean.decimal,
-                                start_lng_double_bean.number, start_lng_double_bean.decimal, end_lat_double_bean.number,
-                                end_lat_double_bean.decimal, end_lng_double_bean.number, end_lng_double_bean.decimal);
+                                start_lng_double_bean.number, start_lng_double_bean.decimal,end_lng_double_bean.decimal);
+
+                        //生成训练数据维度训练特征
 
                         /*测试数据特征挖掘及格式化*/
 //                        String format = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", split[1],
@@ -117,5 +125,13 @@ public class FeatureMining {
             doubleBean.decimal = split[1];
         }
         return doubleBean;
+    }
+
+    public static void  writeTrainLat(){
+
+    }
+
+    public static void writeTrainLng(){
+
     }
 }
