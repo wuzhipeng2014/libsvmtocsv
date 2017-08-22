@@ -15,11 +15,11 @@ start=time.time()
 print '程序开始运行时间为:{starttime}'.format(starttime=start)
 
 # 读入训练数据
-train = pd.read_csv('/home/zhipengwu/work/toutiao/Libsvmtocsv/src/main/resources/mobike/fomat_train_lat.csv')
+train = pd.read_csv('/home/zhipengwu/work/toutiao/Libsvmtocsv/src/main/resources/mobike/fomat_train_lng.csv')
 test = pd.read_csv('/home/zhipengwu/work/toutiao/Libsvmtocsv/src/main/resources/mobike/fomat_train.csv')
 
 x_train=train.loc[:,'userid':'start_lng_decimal']
-y=train.end_lat_decimal
+y=train.end_lng_decimal
 
 
 def rmse_cv(model):
@@ -42,8 +42,8 @@ print rmse_cv(model_lasso).mean()
 preds = pd.DataFrame({"preds": model_lasso.predict(x_train), "true": y})
 preds.to_csv('/home/zhipengwu/work/toutiao/Libsvmtocsv/src/main/resources/mobike/format_train_pred.csv',header=True,index=True)
 
-preds_test=pd.DataFrame({"preds_test":model_lasso.predict(test)});
-preds_test.to_csv('/home/zhipengwu/work/toutiao/Libsvmtocsv/src/main/resources/mobike/format_test_pred.csv',header=True,index=True)
+# preds_test=pd.DataFrame({"preds_test":model_lasso.predict(test)});
+# preds_test.to_csv('/home/zhipengwu/work/toutiao/Libsvmtocsv/src/main/resources/mobike/format_test_pred.csv',header=True,index=True)
 
 
 preds["residuals"] = preds["true"] - preds["preds"]
