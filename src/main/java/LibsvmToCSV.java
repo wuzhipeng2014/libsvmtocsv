@@ -473,6 +473,26 @@ public class LibsvmToCSV {
         rowList.add(maxActiveRadius);
         rowList.add(maxshiftCityRatio);
 
+
+        //4. 调整activeDaysOfTopCity和activeDaysOfEndCity的值
+        Integer activeDaysOfTopCityIndex = featurNametoIndexMap.get("activeDaysOfTopCity");
+        Integer activeDaysOfEndCityIndex = featurNametoIndexMap.get("activeDaysOfEndCity");
+        Integer citeNumIndex = featurNametoIndexMap.get("citeNum");
+        Double activeDaysOfTopCity = Double.valueOf(rowList.get(activeDaysOfTopCityIndex));
+        Double activeDaysOfEndCity = Double.valueOf(rowList.get(activeDaysOfEndCityIndex));
+        Double citeNum = Double.valueOf(rowList.get(citeNumIndex));
+
+        if (activeDaysOfEndCity>activeDaysOfTopCity){
+            double tmp=activeDaysOfTopCity;
+            activeDaysOfTopCity=activeDaysOfEndCity;
+            activeDaysOfEndCity=tmp;
+        }
+        if (citeNum<=1){
+            activeDaysOfEndCity= Double.valueOf(0);
+        }
+        rowList.set(activeDaysOfTopCityIndex,String.valueOf(activeDaysOfTopCity));
+        rowList.set(activeDaysOfEndCityIndex,String.valueOf(activeDaysOfEndCity));
+
     }
 
 
