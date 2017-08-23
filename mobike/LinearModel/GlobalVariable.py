@@ -1,0 +1,12 @@
+GLOBAL_A=4
+GLOBAL_B='world'
+
+#encoding:utf-8
+
+IntegerFeartureNum=33
+CategoryFeatureNum=3
+
+IntegerFeartureRange=IntegerFeartureNum+1
+CategoryFeatureRange=CategoryFeatureNum+1
+ffmCategoryFeatureStartIndex=IntegerFeartureNum
+ffmGBDTFeatrueStartIndex=IntegerFeartureNum+CategoryFeatureNum
