@@ -45,7 +45,11 @@ public class LibsvmToCSV {
         // String inputFileName = "hotel_train_20170813.libsvm";
         // String libsvmDescFile = baseDir + "libsvm格式说明20170813.txt"; // libsvm列名文件
 
-        loadPhonePrice("src/main/resources/toutiao/phone_price_result_20170823.txt");
+        // cn2
+        String phonePricename = "/home/q/zhipeng.wu/logData/toutiao/train/phone_price_result_20170823.txt";
+        // local
+//        String phonePricename = "src/main/resources/toutiao/phone_price_result_20170823.txt";
+        loadPhonePrice(phonePricename);
         DateTime dateTime = DateTime.now();
         String localDate = dateTime.toLocalDate().toString();
         baseDir = args[0];
@@ -311,8 +315,8 @@ public class LibsvmToCSV {
         rowList.add(MD5Util.getMd5(model));
 
         // ================================================================================================
-        //添加手机价格特征
-        addPhonePriceFeature(rowList,model);
+        // 添加手机价格特征
+        addPhonePriceFeature(rowList, model);
 
         // 添加其他数字特征(1. 周平均活跃天数,2. 工作日/节假日跨市移动最大比值,3. 最大活动半径/平均活动半径 最大比值)
         addOtherFeature(rowList);
@@ -476,8 +480,8 @@ public class LibsvmToCSV {
         if (min <= 0) {
             min = 1;
         }
-        if (shiftCitys1<=0){
-            shiftCitys1=0.5;
+        if (shiftCitys1 <= 0) {
+            shiftCitys1 = 0.5;
         }
         // 3. 跨市移动次数/(节假日|工作日)跨市移动频次最大比值
         String maxshiftCityRatio = String.valueOf(dcmFmt.format(shiftCitys1 / min));
@@ -517,13 +521,13 @@ public class LibsvmToCSV {
             String price = modelPriceMap.get(model);
             if (!Strings.isNullOrEmpty(price)) {
                 if (isNum(price)) {
-                    rowList.add(String.valueOf(Math.ceil(Double.valueOf(price)/500)));
+                    rowList.add(String.valueOf(Math.ceil(Double.valueOf(price) / 500)));
                     return;
                 }
             }
 
         }
-        rowList.add(String.valueOf(Math.ceil(Double.valueOf(defaultPhonePrice)/500)));
+        rowList.add(String.valueOf(Math.ceil(Double.valueOf(defaultPhonePrice) / 500)));
 
     }
 
