@@ -46,9 +46,9 @@ public class LibsvmToCSV {
         // String libsvmDescFile = baseDir + "libsvm格式说明20170813.txt"; // libsvm列名文件
 
         // cn2
-        String phonePricename = "/home/q/zhipeng.wu/logData/toutiao/train/phone_price_result_20170823.txt";
+//        String phonePricename = "/home/q/zhipeng.wu/logData/toutiao/train/phone_price_result_20170823.txt";
         // local
-//        String phonePricename = "src/main/resources/toutiao/phone_price_result_20170823.txt";
+        String phonePricename = "src/main/resources/toutiao/phone_price_result_20170823.txt";
         loadPhonePrice(phonePricename);
         DateTime dateTime = DateTime.now();
         String localDate = dateTime.toLocalDate().toString();
@@ -61,7 +61,7 @@ public class LibsvmToCSV {
         String outputFileName = String.format("%s_%s%s", inputFileName, localDate, ".csv");
         String inputFile = baseDir + inputFileName;
         String outputFile = baseDir + outputFileName;
-        int dim = 29; // 转换后的维数
+        int dim = 30; // 转换后的维数
         FileWriter csvFile = new FileWriter(outputFile);
         String header = "Label,I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I12,I13,I14,I15,I16,I17,I18,I19,I20,I21,I22,I23,I24,I25,I26,I27,I28,I29,I30,I31,I32,I33,I34,C1,C2,C3";
         if (addHeader) {
