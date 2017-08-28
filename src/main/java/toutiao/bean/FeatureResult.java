@@ -25,9 +25,13 @@ public class FeatureResult {
     public String platform;
     public String shiftCityname;
     public String residentCity;
-    public static String header=String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s","keyid","Label","I1","I2","I3","I4","I5","I6","I7","I8","I9","I10","I11","I12","I13","I14","C1","C2");
 
-    public static String header2=String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s","keyid","Label","shiftAreaToalNum","avgShiftCityNum","maxShiftCityNum","shiftCityTotal","maxDayActiveRadius","avgDayActiveRadius","DayActiveRadiusRatio","phoneLevel","age","toutiaoActiveDayNum","shiftAreaToalNum","avgShitAreaNum","gender","platform","shiftCityname","residentCity");
+    //移动区域个数
+    public String allShiftAreaNum;
+
+    public static String header=String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s","Label","I1","I2","I3","I4","I5","I6","I7","I8","I9","I10","I11","I12","I13","I14","I15","I16","C1","C2");
+
+    public static String header2=String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s","keyid","Label","shiftAreaToalNum","avgShiftCityNum","maxShiftCityNum","shiftCityTotal","maxDayActiveRadius","avgDayActiveRadius","DayActiveRadiusRatio","phoneLevel","age","toutiaoActiveDayNum","shiftAreaToalNum","avgShitAreaNum","gender","platform","shiftCityname","residentCity");
 
 
     public String toString(){

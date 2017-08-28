@@ -25,9 +25,8 @@ public class MergeCsvFile {
         String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_20170822.txt.csv";
         String file2="/home/zhipengwu/secureCRT/train_hotel_feature_20170822.txt";
         String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_feature_20170822.txt.csv";
-
-
         loadPart2Feature(file2);
+
         joinFile(file1,outfile);
 
     }
@@ -58,7 +57,7 @@ public class MergeCsvFile {
         try {
             LineIterator lineIterator1 = FileUtils.lineIterator(new File(file1));
             FileWriter fw=new FileWriter(outputFile);
-            fw.append(FeatureResult.header);
+            fw.append(FeatureResult.header+"\n");
             List<String> list= Lists.newArrayList();
             while (lineIterator1.hasNext()){
                 String line1 = lineIterator1.nextLine();
@@ -73,9 +72,9 @@ public class MergeCsvFile {
                 }
                 int len1=split1.length;
                 int len2=split2.length;
-                String[] resultPart1 = Arrays.copyOfRange(split1, 1, 16);
+                String[] resultPart1 = Arrays.copyOfRange(split1, 1, 17);
                 int lengthPart1 = resultPart1.length;
-                String[] resultPart3 = Arrays.copyOfRange(split1, 16,len1);
+                String[] resultPart3 = Arrays.copyOfRange(split1, 17,len1);
                 resultPart1= Arrays.copyOf(resultPart1, len1 + len2-2);
                 System.arraycopy(resultPart2,0,resultPart1,lengthPart1,resultPart2.length);
                 System.arraycopy(resultPart3,0,resultPart1,lengthPart1+resultPart2.length,resultPart3.length);

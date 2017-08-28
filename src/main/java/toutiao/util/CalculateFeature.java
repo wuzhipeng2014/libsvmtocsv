@@ -48,9 +48,11 @@ public class CalculateFeature {
         Map<String, Set<String>> cityCollectByDayMap = Maps.newHashMap();
         //按天存储经过的各区域
         Map<String,Set<Coordinate>> posCollectByDayMap = Maps.newHashMap();
-        //按天存储每天移动区域
+        //按天存储每天移动区域个数
         Map<String,Integer> countShiftAreaByDayMap=Maps.newHashMap();
-        int allAreaNum=areas.size();
+//        int allAreaNum=areas.size();
+        //移动区域总个数
+//        featureResult.allShiftAreaNum=String.valueOf(allAreaNum);
 
         //城市间移动次数统计
         for (UserAreas.Area area : areas) {
@@ -98,12 +100,8 @@ public class CalculateFeature {
         featureResult.avgShiftCityNum=String.valueOf(list.get(midIndex));
 
         //计算跨市移动总次数
-        int shiftCityTimes=0;
-        for (int j = 0; j < list.size(); j++) {
-            if (list.size()>1){
-                shiftCityTimes+=(list.get(j)-1);
-            }
-        }
+        int shiftCityTimes=countShiftCityTimes(cityCollectByDayMap);
+
         featureResult.shiftCityTotal=String.valueOf(shiftCityTimes);
 
         List<Double> distanceList=Lists.newArrayList();
@@ -233,6 +231,32 @@ public class CalculateFeature {
             }
         }
         featureResult.residentCity =residentCity;
+    }
+
+
+    //计算跨市移动总次数
+    public static int countShiftCityTimes(Map<String, Set<String>> cityCollectByDayMap){
+        int shiftCityCount=0;
+        Set<String> dates = cityCollectByDayMap.keySet();
+        List<String> dateList=Lists.newArrayList();
+        dateList.addAll(dates);
+        dateList.sort(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.compareTo(o2);
+            }
+        });
+        List<String> shiftCityByDayList=Lists.newArrayList();
+        for (String date:dateList){
+            shiftCityByDayList.addAll(cityCollectByDayMap.get(date));
+        }
+        //计算跨市移动总次数(shiftCityByDayList中相邻两个城市名称不同的个数)
+        for (int i = 1; i < shiftCityByDayList.size(); i++) {
+            if (!shiftCityByDayList.get(i).equalsIgnoreCase(shiftCityByDayList.get(i-1))){
+                shiftCityCount++;
+            }
+        }
+        return shiftCityCount;
     }
 
 
