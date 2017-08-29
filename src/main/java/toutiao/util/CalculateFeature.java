@@ -235,9 +235,9 @@ public class CalculateFeature {
         // 跨市移动总次数
         int shiftCityCount = 0;
         // 周末跨市移动总次数
-        int weekendShiftCityCount = 0;
+        Double weekendShiftCityCount = 0.0;
         // 工作日跨市移动总次数
-        int workdayShiftCityCount = 0;
+        Double workdayShiftCityCount = 0.0;
 
         Set<String> dates = cityCollectByDayMap.keySet();
         List<String> dateList = Lists.newArrayList();
@@ -281,12 +281,12 @@ public class CalculateFeature {
         // 工作日/节假日开始移动次数比值
         if (weekendShiftCityCount>workdayShiftCityCount){
             if (workdayShiftCityCount==0){
-                workdayShiftCityCount=1;
+                workdayShiftCityCount=0.5;
             }
             featureResult.weekendShiftCityCountRatio=String.valueOf( dcmFmt.format((double) weekendShiftCityCount/workdayShiftCityCount));
         }else {
             if (weekendShiftCityCount==0){
-                weekendShiftCityCount=1;
+                weekendShiftCityCount=0.5;
             }
             featureResult.weekendShiftCityCountRatio=String.valueOf(dcmFmt.format((double) workdayShiftCityCount/weekendShiftCityCount));
         }
