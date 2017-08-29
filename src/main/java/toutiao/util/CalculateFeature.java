@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.qunar.mobile.innovation.histories.UserHistoryInfo;
 import mobike.util.GeoDistance;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
@@ -32,7 +33,11 @@ public class CalculateFeature {
     public static DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyyMMdd");
     public static DecimalFormat dcmFmt = new DecimalFormat("0.00");
     public static Map<String, String> modelPriceMap = Maps.newHashMap();
+    public static Map<String, String> cityLevelMap = Maps.newHashMap();
+
     public static String defaultValue = "-10";
+    public static int maxCityFrequency=1;
+    // 日志中城市出现次数
     public static Map<String, Integer> countCityFrequency = Maps.newHashMap();
 
     // I1.移动城市城市总数
@@ -105,17 +110,20 @@ public class CalculateFeature {
             Set<Coordinate> coordinates = posCollectByDayMap.get(date);
             List<Coordinate> coordinateList = Lists.newArrayList();
             coordinateList.addAll(coordinates);
+            Double tmpMaxActiveRadius = 1000.0; // 当天最大活跃半径
             for (int j = 0; j < coordinateList.size(); j++) {
                 Coordinate coordinate1 = coordinateList.get(j);
                 for (int k = j; k < coordinateList.size(); k++) {
                     Coordinate coordinate2 = coordinateList.get(k);
                     double distance = GeoDistance.getDistance(coordinate1.lat, coordinate1.lng, coordinate2.lat,
                             coordinate2.lng);
-                    if (distance > 0) {
-                        distanceList.add(distance);
+                    if (distance > tmpMaxActiveRadius) {
+                        tmpMaxActiveRadius = distance;
                     }
                 }
-
+            }
+            if (tmpMaxActiveRadius > 1000) {
+                distanceList.add(tmpMaxActiveRadius);
             }
         }
         distanceList.sort(new Comparator<Double>() {
@@ -210,9 +218,13 @@ public class CalculateFeature {
 
         // 计算日志中城市出现热度
         addMap(String.format("C1-%s", joinCities), countCityFrequency);
-        // for(String city:cities){
-        // addMap(city,countCityFrequency);
-        // }
+        int sumFrequency=0;
+        for (String city:cities){
+            Integer frequency = countCityFrequency.get(city);
+            sumFrequency+=frequency;
+        }
+        featureResult.shfitCityTotalHeat=String.valueOf(sumFrequency/maxCityFrequency);
+
     }
 
     // C21. 常住地
@@ -228,6 +240,12 @@ public class CalculateFeature {
             }
         }
         featureResult.residentCity = residentCity;
+        //常住地城市所属等级
+        String cityLevel = cityLevelMap.get(residentCity);
+        if (Strings.isNullOrEmpty(cityLevel)){
+            cityLevel="4";
+        }
+        featureResult.residentCityLevel=cityLevel;
     }
 
     // 计算跨市移动总次数
@@ -279,20 +297,20 @@ public class CalculateFeature {
         // 周末跨市移动总次数
         featureResult.weekendShiftCityCount = String.valueOf(weekendShiftCityCount);
         // 工作日/节假日开始移动次数比值
-        if (weekendShiftCityCount>workdayShiftCityCount){
-            if (workdayShiftCityCount==0){
-                workdayShiftCityCount=0.5;
+        if (weekendShiftCityCount > workdayShiftCityCount) {
+            if (workdayShiftCityCount == 0) {
+                workdayShiftCityCount = 0.5;
             }
-            featureResult.weekendShiftCityCountRatio=String.valueOf( dcmFmt.format((double) weekendShiftCityCount/workdayShiftCityCount));
-        }else {
-            if (weekendShiftCityCount==0){
-                weekendShiftCityCount=0.5;
+            featureResult.weekendShiftCityCountRatio = String
+                    .valueOf(dcmFmt.format((double) weekendShiftCityCount / workdayShiftCityCount));
+        } else {
+            if (weekendShiftCityCount == 0) {
+                weekendShiftCityCount = 0.5;
             }
-            featureResult.weekendShiftCityCountRatio=String.valueOf(dcmFmt.format((double) workdayShiftCityCount/weekendShiftCityCount));
+            featureResult.weekendShiftCityCountRatio = String
+                    .valueOf(dcmFmt.format((double) workdayShiftCityCount / weekendShiftCityCount));
         }
     }
-
-
 
     public static <T> void putMap(String key, T value, Map<String, Set<T>> map) {
         if (map.containsKey(key)) {
@@ -310,6 +328,30 @@ public class CalculateFeature {
             map.put(key, integer + 1);
         } else {
             map.put(key, 1);
+        }
+    }
+
+
+    /**
+     * 加载城市等级
+     * @param fileName
+     */
+    public static void loadCityLevel(String fileName){
+        try {
+            LineIterator lineIterator = FileUtils.lineIterator(new File(fileName));
+            while (lineIterator.hasNext()) {
+                String line = lineIterator.nextLine();
+                if (!Strings.isNullOrEmpty(line)) {
+                    String[] split = line.split(",");
+                    if (split.length == 2) {
+                        String city = split[1];
+                        String level = split[2];
+                        cityLevelMap.put(city, level);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -347,6 +389,28 @@ public class CalculateFeature {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static void calculateCityFrequency(String inputFileName) {
+        try {
+            LineIterator lineIterator = FileUtils.lineIterator(new File(inputFileName));
+            String line = "";
+            while (lineIterator.hasNext()) {
+                line = lineIterator.nextLine();
+                FeatureResult featureResult = new FeatureResult();
+                ToutiaoUserBehavior toutiaoUserBehavior = UserHistoryInfo.GSON.fromJson(line,
+                        ToutiaoUserBehavior.class);
+                for (String city : toutiaoUserBehavior.cites.keySet()) {
+                    addMap(city, countCityFrequency);
+                    if (countCityFrequency.get(city)>maxCityFrequency){
+                        maxCityFrequency=countCityFrequency.get(city);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

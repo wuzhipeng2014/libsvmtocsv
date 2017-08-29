@@ -35,6 +35,7 @@ public class LibsvmToCSV {
     public static Map<String, Integer> countCityFeatureMap = Maps.newHashMap();
     public static Map<String, String> modelPriceMap = Maps.newHashMap();
 
+
     public static Double maxModel = 1.0;
     public static Double maxCity = 1.0;
     public static String baseDir = "";
@@ -556,5 +557,7 @@ public class LibsvmToCSV {
             e.printStackTrace();
         }
     }
+
+
 
 }
