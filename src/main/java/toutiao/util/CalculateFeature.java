@@ -105,12 +105,14 @@ public class CalculateFeature {
         countShiftCityTimes(cityCollectByDayMap, featureResult);
 
         List<Double> distanceList = Lists.newArrayList();
+        List<String> distanceCrspdDateList=Lists.newArrayList();
         // 每日移动区域半径
         for (String date : posCollectByDayMap.keySet()) {
             Set<Coordinate> coordinates = posCollectByDayMap.get(date);
             List<Coordinate> coordinateList = Lists.newArrayList();
             coordinateList.addAll(coordinates);
-            Double tmpMaxActiveRadius = 1000.0; // 当天最大活跃半径
+            Double tmpMaxActiveRadius = 1000.0;
+            // 当天最大活跃半径
             for (int j = 0; j < coordinateList.size(); j++) {
                 Coordinate coordinate1 = coordinateList.get(j);
                 for (int k = j; k < coordinateList.size(); k++) {
@@ -124,6 +126,7 @@ public class CalculateFeature {
             }
             if (tmpMaxActiveRadius > 1000) {
                 distanceList.add(tmpMaxActiveRadius);
+                distanceCrspdDateList.add(date);
             }
         }
         distanceList.sort(new Comparator<Double>() {
@@ -143,11 +146,15 @@ public class CalculateFeature {
             // 单天活跃半径差异度
             double v = distanceList.get(size - 1) / distanceList.get((int) Math.floor(size / 2));
             featureResult.DayActiveRadiusRatio = dcmFmt.format(v);
+
         } else {
             featureResult.maxDayActiveRadius = defaultValue;
             featureResult.avgDayActiveRadius = defaultValue;
             featureResult.DayActiveRadiusRatio = defaultValue;
         }
+
+        //节假日平均移动半径|工作日平均移动半径|节假日平均移动半径/工作日平均移动半径 比值
+        calculateAvgClassifiActiveRadius(distanceList,distanceCrspdDateList,featureResult);
 
         List<Integer> countAreabyDayList = Lists.newArrayList();
         countAreabyDayList.addAll(countShiftAreaByDayMap.values());
@@ -164,6 +171,10 @@ public class CalculateFeature {
         // 每日移动区域个数均值
         featureResult.avgShitAreaNum = String
                 .valueOf(countAreabyDayList.get((int) Math.floor(countAreabyDayListSize / 2)));
+
+        //todo 节假日|工作日 每日移动区域个数及比值
+
+
 
         // 头条活跃天数
         featureResult.toutiaoActiveDayNum = String.valueOf(cityCollectByDayMap.size());
@@ -223,7 +234,7 @@ public class CalculateFeature {
             Integer frequency = countCityFrequency.get(city);
             sumFrequency+=frequency;
         }
-        featureResult.shfitCityTotalHeat=String.valueOf(sumFrequency/maxCityFrequency);
+        featureResult.shfitCityTotalHeat=dcmFmt.format((double)sumFrequency/maxCityFrequency);
 
     }
 
@@ -312,6 +323,46 @@ public class CalculateFeature {
         }
     }
 
+
+    //节假日|工作日平均移动半径
+    public static void calculateAvgClassifiActiveRadius(List<Double> distanceList,List<String> distanceCrspdDateList,FeatureResult featureResult){
+        Double sumWeekendRadius=0.0;
+        Double sumWorkdayRadius=0.0;
+        int countWeekendDayNum=0;
+        int countWorkDayNum=0;
+
+        for (int i = 0; i < distanceCrspdDateList.size(); i++) {
+            String date = distanceCrspdDateList.get(i);
+            DateTime dateTime = fmt.parseDateTime(date);
+            int dayOfWeek = dateTime.getDayOfWeek();
+            if (dayOfWeek>5){
+                sumWeekendRadius+=distanceList.get(i);
+                countWeekendDayNum++;
+            }else {
+                sumWorkdayRadius+=distanceList.get(i);
+                countWorkDayNum++;
+            }
+        }
+        if (countWorkDayNum>0){
+            featureResult.avgWorkdayActiveRadius=dcmFmt.format(sumWorkdayRadius/countWorkDayNum);
+        }else {
+            featureResult.avgWorkdayActiveRadius=defaultValue;
+        }
+        if (countWeekendDayNum>0){
+            featureResult.avgWeekendActiveRadius=dcmFmt.format(sumWeekendRadius/countWeekendDayNum);
+        }else {
+            featureResult.avgWeekendActiveRadius=defaultValue;
+        }
+        if (!featureResult.avgWorkdayActiveRadius.equalsIgnoreCase(defaultValue)&&!featureResult.avgWeekendActiveRadius.equalsIgnoreCase(defaultValue)){
+            featureResult.avgActiveRadiusRatio=dcmFmt.format(Double.valueOf(featureResult.avgWeekendActiveRadius)/Double.valueOf(featureResult.avgWorkdayActiveRadius));
+        }else {
+            featureResult.avgActiveRadiusRatio=defaultValue;
+        }
+
+    }
+
+
+
     public static <T> void putMap(String key, T value, Map<String, Set<T>> map) {
         if (map.containsKey(key)) {
             map.get(key).add(value);
@@ -331,6 +382,16 @@ public class CalculateFeature {
         }
     }
 
+    public static boolean isNum(String str) {
+
+        try {
+            new BigDecimal(str);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     /**
      * 加载城市等级
@@ -344,8 +405,8 @@ public class CalculateFeature {
                 if (!Strings.isNullOrEmpty(line)) {
                     String[] split = line.split(",");
                     if (split.length == 2) {
-                        String city = split[1];
-                        String level = split[2];
+                        String city = split[0];
+                        String level = split[1];
                         cityLevelMap.put(city, level);
                     }
                 }
@@ -378,16 +439,6 @@ public class CalculateFeature {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    public static boolean isNum(String str) {
-
-        try {
-            new BigDecimal(str);
-            return true;
-        } catch (Exception e) {
-            return false;
         }
     }
 

@@ -35,11 +35,20 @@ public class FeatureResult {
     public String weekendShiftCityCountRatio;
     // 移动城市热度之和
     public String shfitCityTotalHeat;
+    //常住地城市等级
     public String residentCityLevel;
 
-    public static String header = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s", "Label",
+    //节假日平均移动半径
+    public String avgWeekendActiveRadius;
+    //工作日平均移动半径
+    public String avgWorkdayActiveRadius;
+    //节假日|工作日平均移动半径比值
+    public String avgActiveRadiusRatio;
+
+
+    public static String header = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s", "Label",
             "I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I9", "I10", "I11", "I12", "I13", "I14", "I15", "I16",
-            "I17", "I18","I19", "C1", "C2");
+            "I17", "I18","I19","I20","I21","I22", "C1", "C2");
 
     public static String header2 = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s", "keyid", "Label",
             "shiftAreaToalNum", "avgShiftCityNum", "maxShiftCityNum", "shiftCityTotal", "maxDayActiveRadius",
@@ -48,11 +57,11 @@ public class FeatureResult {
             "residentCity");
 
     public String toString() {
-        String format = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s", keyid,
+        String format = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s", keyid,
                 Lable, shiftAreaToalNum, avgShiftCityNum, maxShiftCityNum, shiftCityTotal, maxDayActiveRadius,
                 avgDayActiveRadius, DayActiveRadiusRatio, phoneLevel, age, toutiaoActiveDayNum, shiftAreaToalNum,
                 avgShitAreaNum, gender, platform, workdayShiftCityCount, weekendShiftCityCount,
-                weekendShiftCityCountRatio, shfitCityTotalHeat, residentCityLevel, shiftCityname, residentCity);
+                weekendShiftCityCountRatio, shfitCityTotalHeat, residentCityLevel,avgWeekendActiveRadius,avgWorkdayActiveRadius,avgActiveRadiusRatio, shiftCityname, residentCity);
         return format;
     }
 }
