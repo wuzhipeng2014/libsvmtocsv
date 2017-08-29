@@ -25,9 +25,13 @@ public class FeatureResult {
     public String platform;
     public String shiftCityname;
     public String residentCity;
-
-    //移动区域个数
-    public String allShiftAreaNum;
+    //===================20170829============================
+    //工作日跨市移动次数
+    public String workdayShiftCityCount;
+    //周末跨市移动次数
+    public String  weekendShiftCityCount;
+    //工作日跨市移动次数/周末跨市移动次数
+    public String weekendShiftCityCountRatio;
 
     public static String header=String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s","Label","I1","I2","I3","I4","I5","I6","I7","I8","I9","I10","I11","I12","I13","I14","I15","I16","C1","C2");
 
@@ -35,7 +39,8 @@ public class FeatureResult {
 
 
     public String toString(){
-        String format = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s", keyid,Lable, shiftAreaToalNum, avgShiftCityNum, maxShiftCityNum, shiftCityTotal, maxDayActiveRadius, avgDayActiveRadius, DayActiveRadiusRatio, phoneLevel, age,toutiaoActiveDayNum, shiftAreaToalNum, avgShitAreaNum, gender, platform, shiftCityname, residentCity);
+        String format = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s", keyid,Lable, shiftAreaToalNum, avgShiftCityNum, maxShiftCityNum, shiftCityTotal, maxDayActiveRadius, avgDayActiveRadius, DayActiveRadiusRatio, phoneLevel, age,toutiaoActiveDayNum, shiftAreaToalNum, avgShitAreaNum, gender, platform, workdayShiftCityCount,weekendShiftCityCount,weekendShiftCityCountRatio,
+                shiftCityname, residentCity);
         return format;
     }
 }

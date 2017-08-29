@@ -32,29 +32,26 @@ public class CalculateFeature {
     public static DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyyMMdd");
     public static DecimalFormat dcmFmt = new DecimalFormat("0.00");
     public static Map<String, String> modelPriceMap = Maps.newHashMap();
-    public static String defaultValue="-10";
-    public static Map<String,Integer> countCityFrequency=Maps.newHashMap();
+    public static String defaultValue = "-10";
+    public static Map<String, Integer> countCityFrequency = Maps.newHashMap();
 
     // I1.移动城市城市总数
-    public static void getShiftCityTotalNum(ToutiaoUserBehavior toutiaoUserBehavior,FeatureResult featureResult) {
-        featureResult.shiftCityTotalNum=String.valueOf(toutiaoUserBehavior.cites.size());
+    public static void getShiftCityTotalNum(ToutiaoUserBehavior toutiaoUserBehavior, FeatureResult featureResult) {
+        featureResult.shiftCityTotalNum = String.valueOf(toutiaoUserBehavior.cites.size());
     }
 
-    //I2.一天(相邻两天)内移动城市个数 (隔天)平均值(中值), I3.最大值, I5.及城市间移动的总次数
-    public static void getAvgShiftCityNum(ToutiaoUserBehavior toutiaoUserBehavior,FeatureResult featureResult) {
+    // I2.一天(相邻两天)内移动城市个数 (隔天)平均值(中值), I3.最大值, I5.及城市间移动的总次数
+    public static void getAvgShiftCityNum(ToutiaoUserBehavior toutiaoUserBehavior, FeatureResult featureResult) {
         List<UserAreas.Area> areas = toutiaoUserBehavior.areas;
         int[] shiftCityNum = new int[2];
-        //按天存储移动的城市名称
+        // 按天存储移动的城市名称
         Map<String, Set<String>> cityCollectByDayMap = Maps.newHashMap();
-        //按天存储经过的各区域
-        Map<String,Set<Coordinate>> posCollectByDayMap = Maps.newHashMap();
-        //按天存储每天移动区域个数
-        Map<String,Integer> countShiftAreaByDayMap=Maps.newHashMap();
-//        int allAreaNum=areas.size();
-        //移动区域总个数
-//        featureResult.allShiftAreaNum=String.valueOf(allAreaNum);
+        // 按天存储经过的各区域
+        Map<String, Set<Coordinate>> posCollectByDayMap = Maps.newHashMap();
+        // 按天存储每天移动区域个数
+        Map<String, Integer> countShiftAreaByDayMap = Maps.newHashMap();
 
-        //城市间移动次数统计
+        // 城市间移动次数统计
         for (UserAreas.Area area : areas) {
             String nowCity = area.nowCity;
             for (String posKey : area.locations.keySet()) {
@@ -66,14 +63,14 @@ public class CalculateFeature {
                     putMap(formateDate, nowCity, cityCollectByDayMap);
                     putMap(nextDay, nowCity, cityCollectByDayMap);
 
-                    addMap(formateDate,countShiftAreaByDayMap);
+                    addMap(formateDate, countShiftAreaByDayMap);
 
-                    Coordinate coordinate=new Coordinate();
+                    Coordinate coordinate = new Coordinate();
                     String[] posValue = posKey.split(",");
-                    coordinate.lng=Double.valueOf(posValue[0]);
-                    coordinate.lat=Double.valueOf(posValue[1]);
-                    putMap(formateDate, coordinate,posCollectByDayMap);
-                    putMap(nextDay, coordinate,posCollectByDayMap);
+                    coordinate.lng = Double.valueOf(posValue[0]);
+                    coordinate.lat = Double.valueOf(posValue[1]);
+                    putMap(formateDate, coordinate, posCollectByDayMap);
+                    putMap(nextDay, coordinate, posCollectByDayMap);
 
                 }
             }
@@ -82,7 +79,7 @@ public class CalculateFeature {
         int avgShiftCityNum = 0;
         int tmpcount = 0;
         int mapsize = cityCollectByDayMap.size();
-        int midIndex = (int) Math.floor(mapsize/2);
+        int midIndex = (int) Math.floor(mapsize / 2);
         int i = 0;
         List<Integer> list = Lists.newArrayList();
         for (String key : cityCollectByDayMap.keySet()) {
@@ -94,28 +91,27 @@ public class CalculateFeature {
                 return o1.compareTo(o2);
             }
         });
-        //计算一天内移动城市次数的最大值
-        featureResult.maxShiftCityNum= String.valueOf(list.get(mapsize-1));
-        //计算一天内移动城市的均值
-        featureResult.avgShiftCityNum=String.valueOf(list.get(midIndex));
+        // 计算一天内移动城市次数的最大值
+        featureResult.maxShiftCityNum = String.valueOf(list.get(mapsize - 1));
+        // 计算一天内移动城市的均值
+        featureResult.avgShiftCityNum = String.valueOf(list.get(midIndex));
 
-        //计算跨市移动总次数
-        int shiftCityTimes=countShiftCityTimes(cityCollectByDayMap);
+        // 计算跨市移动总次数(总|周末|工作日)
+        countShiftCityTimes(cityCollectByDayMap, featureResult);
 
-        featureResult.shiftCityTotal=String.valueOf(shiftCityTimes);
-
-        List<Double> distanceList=Lists.newArrayList();
-        //每日移动区域半径
-        for (String date:posCollectByDayMap.keySet()){
+        List<Double> distanceList = Lists.newArrayList();
+        // 每日移动区域半径
+        for (String date : posCollectByDayMap.keySet()) {
             Set<Coordinate> coordinates = posCollectByDayMap.get(date);
-             List<Coordinate> coordinateList=Lists.newArrayList();
+            List<Coordinate> coordinateList = Lists.newArrayList();
             coordinateList.addAll(coordinates);
             for (int j = 0; j < coordinateList.size(); j++) {
-                Coordinate coordinate1=coordinateList.get(j);
+                Coordinate coordinate1 = coordinateList.get(j);
                 for (int k = j; k < coordinateList.size(); k++) {
-                    Coordinate coordinate2=coordinateList.get(k);
-                    double distance = GeoDistance.getDistance(coordinate1.lat, coordinate1.lng, coordinate2.lat, coordinate2.lng);
-                    if (distance>0) {
+                    Coordinate coordinate2 = coordinateList.get(k);
+                    double distance = GeoDistance.getDistance(coordinate1.lat, coordinate1.lng, coordinate2.lat,
+                            coordinate2.lng);
+                    if (distance > 0) {
                         distanceList.add(distance);
                     }
                 }
@@ -129,22 +125,23 @@ public class CalculateFeature {
             }
         });
         int size = distanceList.size();
-        if (size>0) {
+        if (size > 0) {
 
-            //单天活跃最大半径
+            // 单天活跃最大半径
             featureResult.maxDayActiveRadius = String.valueOf(dcmFmt.format(distanceList.get(size - 1)));
-            //单天活跃平均半径
-            featureResult.avgDayActiveRadius = String.valueOf(dcmFmt.format(distanceList.get((int) Math.floor(size / 2))));
-            //单天活跃半径差异度
+            // 单天活跃平均半径
+            featureResult.avgDayActiveRadius = String
+                    .valueOf(dcmFmt.format(distanceList.get((int) Math.floor(size / 2))));
+            // 单天活跃半径差异度
             double v = distanceList.get(size - 1) / distanceList.get((int) Math.floor(size / 2));
             featureResult.DayActiveRadiusRatio = dcmFmt.format(v);
-        }else {
-            featureResult.maxDayActiveRadius =defaultValue;
-            featureResult.avgDayActiveRadius =defaultValue;
-            featureResult.DayActiveRadiusRatio=defaultValue;
+        } else {
+            featureResult.maxDayActiveRadius = defaultValue;
+            featureResult.avgDayActiveRadius = defaultValue;
+            featureResult.DayActiveRadiusRatio = defaultValue;
         }
 
-        List<Integer> countAreabyDayList=Lists.newArrayList();
+        List<Integer> countAreabyDayList = Lists.newArrayList();
         countAreabyDayList.addAll(countShiftAreaByDayMap.values());
         countAreabyDayList.sort(new Comparator<Integer>() {
             @Override
@@ -152,93 +149,98 @@ public class CalculateFeature {
                 return o1.compareTo(o2);
             }
         });
-       int countAreabyDayListSize=countAreabyDayList.size();
-        //移动区域总数
-        featureResult.shiftAreaToalNum=String.valueOf(areas.size());
+        int countAreabyDayListSize = countAreabyDayList.size();
+        // 移动区域总数
+        featureResult.shiftAreaToalNum = String.valueOf(areas.size());
 
-        //每日移动区域个数均值
-        featureResult.avgShitAreaNum=String.valueOf(countAreabyDayList.get((int)Math.floor(countAreabyDayListSize/2)));
+        // 每日移动区域个数均值
+        featureResult.avgShitAreaNum = String
+                .valueOf(countAreabyDayList.get((int) Math.floor(countAreabyDayListSize / 2)));
 
         // 头条活跃天数
-        featureResult.toutiaoActiveDayNum=String.valueOf(cityCollectByDayMap.size());
+        featureResult.toutiaoActiveDayNum = String.valueOf(cityCollectByDayMap.size());
 
     }
 
-    //I15 手机等级
-    public static void getPhoneLevel(ToutiaoUserBehavior toutiaoUserBehavior,FeatureResult featureResult){
+    // I15 手机等级
+    public static void getPhoneLevel(ToutiaoUserBehavior toutiaoUserBehavior, FeatureResult featureResult) {
         String model = toutiaoUserBehavior.commParams.model;
         String price = modelPriceMap.get(model);
-        if (Strings.isNullOrEmpty(price)||!isNum(price)){
-            price="999";
+        if (Strings.isNullOrEmpty(price) || !isNum(price)) {
+            price = "999";
         }
         double ceil = Math.ceil(Double.valueOf(price) / 500);
-        featureResult.phoneLevel=String.valueOf(ceil);
+        featureResult.phoneLevel = String.valueOf(ceil);
     }
 
-    //I17 age,gender,platform
-    public static void getAge(ToutiaoUserBehavior toutiaoUserBehavior,FeatureResult featureResult){
-        featureResult.age=String.valueOf(toutiaoUserBehavior.commParams.age);
+    // I17 age,gender,platform
+    public static void getAge(ToutiaoUserBehavior toutiaoUserBehavior, FeatureResult featureResult) {
+        featureResult.age = String.valueOf(toutiaoUserBehavior.commParams.age);
         String gender = toutiaoUserBehavior.commParams.gender;
-        if (gender.equalsIgnoreCase("M")){
-            featureResult.gender=String.valueOf(1);
-        }else if (gender.equalsIgnoreCase("F")){
-            featureResult.gender=String.valueOf(2);
-        }else {
-            featureResult.gender=String.valueOf(3);
+        if (gender.equalsIgnoreCase("M")) {
+            featureResult.gender = String.valueOf(1);
+        } else if (gender.equalsIgnoreCase("F")) {
+            featureResult.gender = String.valueOf(2);
+        } else {
+            featureResult.gender = String.valueOf(3);
 
         }
         String platform = toutiaoUserBehavior.commParams.platform.toString();
-       if (platform.equalsIgnoreCase("adr")){
-           featureResult.platform=String.valueOf(1);
+        if (platform.equalsIgnoreCase("adr")) {
+            featureResult.platform = String.valueOf(1);
 
-       }else if (platform.equalsIgnoreCase("ios")){
-           featureResult.platform=String.valueOf(2);
+        } else if (platform.equalsIgnoreCase("ios")) {
+            featureResult.platform = String.valueOf(2);
 
-       }else {
-           featureResult.platform=String.valueOf(3);
+        } else {
+            featureResult.platform = String.valueOf(3);
 
-       }
-        featureResult.Lable=String.valueOf(toutiaoUserBehavior.hasHotelOrder);
-        featureResult.keyid=toutiaoUserBehavior.commParams.keyId;
+        }
+        featureResult.Lable = String.valueOf(toutiaoUserBehavior.hasHotelOrder);
+        featureResult.keyid = toutiaoUserBehavior.commParams.keyId;
 
     }
 
-
     // C20. 到达过的城市名称
-    public static void getshiftCityname(ToutiaoUserBehavior toutiaoUserBehavior,FeatureResult featureResult) {
+    public static void getshiftCityname(ToutiaoUserBehavior toutiaoUserBehavior, FeatureResult featureResult) {
         Set<String> cities = toutiaoUserBehavior.cites.keySet();
 
         String joinCities = Joiner.on("##").skipNulls().join(cities);
-        featureResult.shiftCityname=joinCities;
+        featureResult.shiftCityname = joinCities;
 
-        //计算日志中城市出现热度
-        addMap(String.format("C1-%s",joinCities),countCityFrequency);
-//        for(String city:cities){
-//            addMap(city,countCityFrequency);
-//        }
+        // 计算日志中城市出现热度
+        addMap(String.format("C1-%s", joinCities), countCityFrequency);
+        // for(String city:cities){
+        // addMap(city,countCityFrequency);
+        // }
     }
 
     // C21. 常住地
-    public static void getresidentCity(ToutiaoUserBehavior toutiaoUserBehavior,FeatureResult featureResult) {
+    public static void getresidentCity(ToutiaoUserBehavior toutiaoUserBehavior, FeatureResult featureResult) {
         Map<String, UserAreas.CityInfo> cites = toutiaoUserBehavior.cites;
-        int maxCityFrequency=0;
-        String residentCity="";
-        for (String cityName:cites.keySet()){
+        int maxCityFrequency = 0;
+        String residentCity = "";
+        for (String cityName : cites.keySet()) {
             UserAreas.CityInfo cityInfo = cites.get(cityName);
-            if (cityInfo.frequency>maxCityFrequency){
-                maxCityFrequency=cityInfo.frequency;
-                residentCity=cityName;
+            if (cityInfo.frequency > maxCityFrequency) {
+                maxCityFrequency = cityInfo.frequency;
+                residentCity = cityName;
             }
         }
-        featureResult.residentCity =residentCity;
+        featureResult.residentCity = residentCity;
     }
 
+    // 计算跨市移动总次数
+    public static void countShiftCityTimes(Map<String, Set<String>> cityCollectByDayMap, FeatureResult featureResult) {
+        // 跨市移动总次数
+        int shiftCityCount = 0;
+        // 周末跨市移动总次数
+        int weekendShiftCityCount = 0;
+        // 工作日跨市移动总次数
+        int workdayShiftCityCount = 0;
 
-    //计算跨市移动总次数
-    public static int countShiftCityTimes(Map<String, Set<String>> cityCollectByDayMap){
-        int shiftCityCount=0;
         Set<String> dates = cityCollectByDayMap.keySet();
-        List<String> dateList=Lists.newArrayList();
+        List<String> dateList = Lists.newArrayList();
         dateList.addAll(dates);
         dateList.sort(new Comparator<String>() {
             @Override
@@ -246,17 +248,48 @@ public class CalculateFeature {
                 return o1.compareTo(o2);
             }
         });
-        List<String> shiftCityByDayList=Lists.newArrayList();
-        for (String date:dateList){
-            shiftCityByDayList.addAll(cityCollectByDayMap.get(date));
-        }
-        //计算跨市移动总次数(shiftCityByDayList中相邻两个城市名称不同的个数)
-        for (int i = 1; i < shiftCityByDayList.size(); i++) {
-            if (!shiftCityByDayList.get(i).equalsIgnoreCase(shiftCityByDayList.get(i-1))){
-                shiftCityCount++;
+        List<String> shiftCityByDayList = Lists.newArrayList();
+        List<String> shiftCityCorrpdDateList = Lists.newArrayList();
+        for (String date : dateList) {
+            Set<String> citiesSet = cityCollectByDayMap.get(date);
+            shiftCityByDayList.addAll(citiesSet);
+            int size = citiesSet.size();
+            for (int i = 0; i < size; i++) {
+                shiftCityCorrpdDateList.add(date);
             }
         }
-        return shiftCityCount;
+        // 计算跨市移动总次数(shiftCityByDayList中相邻两个城市名称不同的个数)
+        for (int i = 1; i < shiftCityByDayList.size(); i++) {
+            if (!shiftCityByDayList.get(i).equalsIgnoreCase(shiftCityByDayList.get(i - 1))) {
+                shiftCityCount++; // 跨市移动总次数
+                String date = shiftCityCorrpdDateList.get(i);
+                DateTime dateTime = fmt.parseDateTime(date);
+                int dayOfWeek = dateTime.getDayOfWeek();
+                if (dayOfWeek > 5) { // 周末
+                    weekendShiftCityCount++;
+                } else {
+                    workdayShiftCityCount++;
+                }
+            }
+        }
+        // 跨市移动总次数
+        featureResult.shiftCityTotal = String.valueOf(shiftCityCount);
+        // 工作日跨市移动总次数
+        featureResult.workdayShiftCityCount = String.valueOf(workdayShiftCityCount);
+        // 周末跨市移动总次数
+        featureResult.weekendShiftCityCount = String.valueOf(weekendShiftCityCount);
+        // 工作日/节假日开始移动次数比值
+        if (weekendShiftCityCount>workdayShiftCityCount){
+            if (workdayShiftCityCount==0){
+                workdayShiftCityCount=1;
+            }
+            featureResult.weekendShiftCityCountRatio=String.valueOf( dcmFmt.format((double) weekendShiftCityCount/workdayShiftCityCount));
+        }else {
+            if (weekendShiftCityCount==0){
+                weekendShiftCityCount=1;
+            }
+            featureResult.weekendShiftCityCountRatio=String.valueOf(dcmFmt.format((double) workdayShiftCityCount/weekendShiftCityCount));
+        }
     }
 
 
@@ -271,12 +304,12 @@ public class CalculateFeature {
         }
     }
 
-    public static void  addMap(String key,Map<String,Integer> map){
-        if (map.containsKey(key)){
+    public static void addMap(String key, Map<String, Integer> map) {
+        if (map.containsKey(key)) {
             Integer integer = map.get(key);
-            map.put(key,integer+1);
-        }else {
-            map.put(key,1);
+            map.put(key, integer + 1);
+        } else {
+            map.put(key, 1);
         }
     }
 
@@ -315,7 +348,5 @@ public class CalculateFeature {
             return false;
         }
     }
-
-
 
 }
