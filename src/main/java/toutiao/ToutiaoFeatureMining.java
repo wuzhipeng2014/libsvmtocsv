@@ -26,7 +26,7 @@ public class ToutiaoFeatureMining {
         Gson gson = new GsonBuilder().create();
         // String phonePriceFile="/home/q/zhipeng.wu/logData/toutiao/train/phone_price_result_20170823.txt";
 
-        String inputfileName = "/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_20170822.txt";
+        String inputfileName = "/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_20170822.txt";
         String outputFileName = String.format("%s.csv", inputfileName);
         String phonePriceFile = "/home/zhipengwu/work/toutiao/Libsvmtocsv/src/main/resources/toutiao/phone_price_result_20170823.txt";
         String cityLevelFile="/home/zhipengwu/work/toutiao/Libsvmtocsv/src/main/resources/toutiao/city_level.txt";

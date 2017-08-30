@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
-import toutiao.bean.FeatureResult;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -22,13 +21,14 @@ public class MergeCsvFile {
 
     public static Map<String,String> part2FeatureMap=Maps.newHashMap();
     public static void main(String[] args) {
-//        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_20170822.txt.csv";
+        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_20170822.txt.csv";
 //        String file2="/home/zhipengwu/secureCRT/train_hotel_feature_20170822.txt";
-//        String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_feature_20170822.txt.csv";
+        String file2="/home/zhipengwu/secureCRT/std_train_hotel_feature_20170822.txt";
+        String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_feature_20170822.txt.csv";
 
-        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_20170822.txt.csv";
-        String file2="/home/zhipengwu/secureCRT/test_hotel_feature_20170822.txt";
-        String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_feature_20170822.txt.csv";
+//        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_20170822.txt.csv";
+//        String file2="/home/zhipengwu/secureCRT/test_hotel_feature_20170822.txt";
+//        String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_feature_20170822.txt.csv";
 
         loadPart2Feature(file2);
 
@@ -62,7 +62,8 @@ public class MergeCsvFile {
         try {
             LineIterator lineIterator1 = FileUtils.lineIterator(new File(file1));
             FileWriter fw=new FileWriter(outputFile);
-            fw.append(FeatureResult.header+"\n");
+//            fw.append(FeatureResult.header+"\n");
+            boolean addHeader=true;
             List<String> list= Lists.newArrayList();
             while (lineIterator1.hasNext()){
                 String line1 = lineIterator1.nextLine();
@@ -102,6 +103,17 @@ public class MergeCsvFile {
 //                System.arraycopy(resultPart2,0,resultPart1,lengthPart1,resultPart2.length);
 //                System.arraycopy(resultPart3,0,resultPart1,lengthPart1+resultPart2.length,resultPart3.length);
                 String join = Joiner.on(",").skipNulls().join(resultList);
+                if (addHeader){
+                    addHeader=false;
+                    StringBuilder sb=new StringBuilder();
+                    sb.append("Label,");
+                    int size = resultList.size();
+                    for (int i = 1; i < size-2; i++) {
+                        sb.append(String.format("I%s,",i));
+                    }
+                    sb.append("C1,C2\n");
+                    fw.append(sb);
+                }
 
                 fw.append(join+"\n");
             }
