@@ -139,10 +139,10 @@ public class CalculateFeature {
         if (size > 0) {
 
             // 单天活跃最大半径
-            featureResult.maxDayActiveRadius = String.valueOf(dcmFmt.format(distanceList.get(size - 1)));
+            featureResult.maxDayActiveRadius = String.valueOf(dcmFmt.format(Math.log1p(distanceList.get(size - 1))));
             // 单天活跃平均半径
             featureResult.avgDayActiveRadius = String
-                    .valueOf(dcmFmt.format(distanceList.get((int) Math.floor(size / 2))));
+                    .valueOf(dcmFmt.format(Math.log1p(distanceList.get((int) Math.floor(size / 2)))));
             // 单天活跃半径差异度
             double v = distanceList.get(size - 1) / distanceList.get((int) Math.floor(size / 2));
             featureResult.DayActiveRadiusRatio = dcmFmt.format(v);
@@ -153,7 +153,7 @@ public class CalculateFeature {
             featureResult.DayActiveRadiusRatio = defaultValue;
         }
 
-        //节假日平均移动半径|工作日平均移动半径|节假日平均移动半径/工作日平均移动半径 比值
+        //todo 节假日平均移动半径|工作日平均移动半径|节假日平均移动半径/工作日平均移动半径 比值
         calculateAvgClassifiActiveRadius(distanceList,distanceCrspdDateList,featureResult);
 
         List<Integer> countAreabyDayList = Lists.newArrayList();
@@ -169,10 +169,11 @@ public class CalculateFeature {
         featureResult.shiftAreaToalNum = String.valueOf(areas.size());
 
         // 每日移动区域个数均值
-        featureResult.avgShitAreaNum = String
+        featureResult.avgShiftAreaNum = String
                 .valueOf(countAreabyDayList.get((int) Math.floor(countAreabyDayListSize / 2)));
 
         //todo 节假日|工作日 每日移动区域个数及比值
+        calculateActiveArea(toutiaoUserBehavior, featureResult);
 
 
 
@@ -344,20 +345,82 @@ public class CalculateFeature {
             }
         }
         if (countWorkDayNum>0){
-            featureResult.avgWorkdayActiveRadius=dcmFmt.format(sumWorkdayRadius/countWorkDayNum);
+            featureResult.avgWorkdayActiveRadius=dcmFmt.format(Math.log1p(sumWorkdayRadius/countWorkDayNum));
         }else {
             featureResult.avgWorkdayActiveRadius=defaultValue;
         }
         if (countWeekendDayNum>0){
-            featureResult.avgWeekendActiveRadius=dcmFmt.format(sumWeekendRadius/countWeekendDayNum);
+            featureResult.avgWeekendActiveRadius=dcmFmt.format(Math.log1p(sumWeekendRadius/countWeekendDayNum));
         }else {
             featureResult.avgWeekendActiveRadius=defaultValue;
         }
         if (!featureResult.avgWorkdayActiveRadius.equalsIgnoreCase(defaultValue)&&!featureResult.avgWeekendActiveRadius.equalsIgnoreCase(defaultValue)){
-            featureResult.avgActiveRadiusRatio=dcmFmt.format(Double.valueOf(featureResult.avgWeekendActiveRadius)/Double.valueOf(featureResult.avgWorkdayActiveRadius));
+            featureResult.avgActiveRadiusRatio=dcmFmt.format(Math.exp(Double.valueOf( featureResult.avgWeekendActiveRadius))/Math.exp(Double.valueOf(featureResult.avgWorkdayActiveRadius)));
         }else {
             featureResult.avgActiveRadiusRatio=defaultValue;
         }
+
+    }
+
+    //todo 节假日|工作日 移动区域个数
+    public static void calculateActiveArea(ToutiaoUserBehavior toutiaoUserBehavior, FeatureResult featureResult){
+        Map<String,Set<String>> dateCoordinateMap=Maps.newHashMap();
+        List<UserAreas.Area> areas = toutiaoUserBehavior.areas;
+        for (UserAreas.Area area:areas){
+            String avgcoordinate=String.format("%s,%s",area.avgLat,area.avgLon);
+            Map<String, Map<String, Integer>> locations = area.locations;
+            for (String coordinate:locations.keySet()){
+                Map<String, Integer> dateCountMap = locations.get(coordinate);
+                for (String date:dateCountMap.keySet()){
+                    String formatDate=date.substring(0,8);
+                    putMap(formatDate,avgcoordinate,dateCoordinateMap);
+                }
+            }
+        }
+
+        Double countWeekendShiftArea=0.0;
+        Double countWorkdayShiftArea=0.0;
+
+        int countWeekenddayNum=0;
+        int countWorkdayNum=0;
+        //节假日|工作日移动区域个数
+        for (String date:dateCoordinateMap.keySet()){
+            DateTime dateTime = fmt.parseDateTime(date);
+            int dayOfWeek = dateTime.getDayOfWeek();
+            if (dayOfWeek > 5) { // 周末
+                countWeekendShiftArea+=dateCoordinateMap.get(date).size();
+                countWeekenddayNum++;
+            }else {
+                countWorkdayShiftArea+=dateCoordinateMap.get(date).size();
+                countWorkdayNum++;
+            }
+        }
+
+
+        //节假日移动区域个数
+        if (countWeekenddayNum>0&&countWeekendShiftArea>0) {
+            featureResult.avgWeekendShiftAreaNum = dcmFmt.format(countWeekendShiftArea/countWeekenddayNum);
+            featureResult.weekendShiftAreaNum=String.valueOf(countWeekendShiftArea);
+        }else {
+            featureResult.weekendShiftAreaNum =defaultValue;
+            featureResult.avgWeekendShiftAreaNum=defaultValue;
+        }
+        //工作日移动区域个数
+        if (countWeekenddayNum>0&&countWorkdayShiftArea>0) {
+            featureResult.avgWorkdayShiftAreaNum = dcmFmt.format(countWorkdayShiftArea/countWorkdayNum);
+            featureResult.workdayShiftAreaNum=String.valueOf(countWorkdayShiftArea);
+        }else {
+            featureResult.avgWorkdayShiftAreaNum=defaultValue;
+            featureResult.workdayShiftAreaNum=defaultValue;
+        }
+        //工作日|节假日移动区域个数比值
+        if (!featureResult.weekendShiftAreaNum.equalsIgnoreCase(defaultValue)&&!featureResult.workdayShiftCityCount.equalsIgnoreCase(defaultValue)&&countWorkdayShiftArea>0){
+            featureResult.shiftAreaNumRatio=dcmFmt.format(countWeekendShiftArea/countWorkdayShiftArea);
+        }else {
+            featureResult.shiftAreaNumRatio=defaultValue;
+        }
+
+
 
     }
 

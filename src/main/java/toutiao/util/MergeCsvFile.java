@@ -22,9 +22,14 @@ public class MergeCsvFile {
 
     public static Map<String,String> part2FeatureMap=Maps.newHashMap();
     public static void main(String[] args) {
+//        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_20170822.txt.csv";
+//        String file2="/home/zhipengwu/secureCRT/train_hotel_feature_20170822.txt";
+//        String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_feature_20170822.txt.csv";
+
         String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_20170822.txt.csv";
         String file2="/home/zhipengwu/secureCRT/test_hotel_feature_20170822.txt";
         String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_feature_20170822.txt.csv";
+
         loadPart2Feature(file2);
 
         joinFile(file1,outfile);
@@ -68,17 +73,35 @@ public class MergeCsvFile {
                 String[] resultPart2=null;
                 if (!Strings.isNullOrEmpty(line2)){
                  split2 = line2.split("\t");
+                    //todo
                     resultPart2=Arrays.copyOfRange(split2,2,split2.length);
                 }
-                int len1=split1.length;
-                int len2=split2.length;
-                String[] resultPart1 = Arrays.copyOfRange(split1, 1, 17);
-                int lengthPart1 = resultPart1.length;
-                String[] resultPart3 = Arrays.copyOfRange(split1, 17,len1);
-                resultPart1= Arrays.copyOf(resultPart1, len1 + len2-2);
-                System.arraycopy(resultPart2,0,resultPart1,lengthPart1,resultPart2.length);
-                System.arraycopy(resultPart3,0,resultPart1,lengthPart1+resultPart2.length,resultPart3.length);
-                String join = Joiner.on(",").skipNulls().join(resultPart1);
+
+                List<String> resultList=Lists.newArrayList();
+                int k=1;
+                for (k = 1; k < split1.length-2; k++) {
+                    resultList.add(split1[k]);
+                }
+                for (int i = 0; i < resultPart2.length; i++) {
+                    resultList.add(resultPart2[i]);
+                }
+                for ( ; k < split1.length; k++) {
+                    resultList.add(split1[k]);
+                }
+
+
+
+
+//                int len1=split1.length;
+//                int len2=split2.length;
+//
+//                String[] resultPart1 = Arrays.copyOfRange(split1, 1, 17);
+//                int lengthPart1 = resultPart1.length;
+//                String[] resultPart3 = Arrays.copyOfRange(split1, 17,len1);
+//                resultPart1= Arrays.copyOf(resultPart1, len1 + len2-2);
+//                System.arraycopy(resultPart2,0,resultPart1,lengthPart1,resultPart2.length);
+//                System.arraycopy(resultPart3,0,resultPart1,lengthPart1+resultPart2.length,resultPart3.length);
+                String join = Joiner.on(",").skipNulls().join(resultList);
 
                 fw.append(join+"\n");
             }
