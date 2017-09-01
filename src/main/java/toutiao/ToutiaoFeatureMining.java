@@ -1,13 +1,16 @@
 package toutiao;
 
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.qunar.mobile.innovation.histories.UserHistoryInfo;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import toutiao.bean.FeatureResult;
+import toutiao.bean.FormatedFeatureResult;
 import toutiao.bean.ToutiaoUserBehavior;
 import toutiao.util.CalculateFeature;
+import toutiao.util.FeatureUtil;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -26,12 +29,12 @@ public class ToutiaoFeatureMining {
         Gson gson = new GsonBuilder().create();
         // String phonePriceFile="/home/q/zhipeng.wu/logData/toutiao/train/phone_price_result_20170823.txt";
 
-        String inputfileName = "/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_20170822.txt";
+        String inputfileName = "/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_20170822.txt";
         String outputFileName = String.format("%s.csv", inputfileName);
         String phonePriceFile = "/home/zhipengwu/work/toutiao/Libsvmtocsv/src/main/resources/toutiao/phone_price_result_20170823.txt";
-        String cityLevelFile="/home/zhipengwu/work/toutiao/Libsvmtocsv/src/main/resources/toutiao/city_level.txt";
+        String cityLevelFile = "/home/zhipengwu/work/toutiao/Libsvmtocsv/src/main/resources/toutiao/city_level.txt";
 
-        boolean appendHeader=false;
+        boolean appendHeader = false;
         CalculateFeature.loadPhonePrice(phonePriceFile);
         CalculateFeature.calculateCityFrequency(inputfileName);
         CalculateFeature.loadCityLevel(cityLevelFile);
@@ -58,12 +61,27 @@ public class ToutiaoFeatureMining {
                 CalculateFeature.getresidentCity(toutiaoUserBehavior, featureResult);
                 CalculateFeature.getshiftCityname(toutiaoUserBehavior, featureResult);
                 CalculateFeature.getShiftCityTotalNum(toutiaoUserBehavior, featureResult);
-                String result = featureResult.toString();
-                fw.append(result + "\n");
-                fw.flush();
+
+                FormatedFeatureResult formatedFeatureResult=new FormatedFeatureResult();
+                FeatureUtil.ConverFreatureResult(featureResult);
+
+
+//                FeatureUtil.cloneFeaturetoFormatedFeatureResult(featureResult, formatedFeatureResult);
+//                FeatureUtil.convertmajorFeaturetoVector(featureResult, formatedFeatureResult);
+
+
+                // TODO: 17-8-31
+//                String result = formatedFeatureResult.toString();
+//                String result = featureResult.toString();
+                String result = featureResult.printStringByLabel("1");
+
+                if (!Strings.isNullOrEmpty(result)) {
+                    fw.append(result + "\n");
+                    fw.flush();
+                }
             }
             fw.close();
-            writeHighFrequencyCity(inputfileName+".highFrequency");
+            writeHighFrequencyCity(inputfileName + ".highFrequency");
 
         } catch (IOException e) {
             e.printStackTrace();

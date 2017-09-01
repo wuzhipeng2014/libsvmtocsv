@@ -35,7 +35,7 @@ public class CalculateFeature {
     public static Map<String, String> modelPriceMap = Maps.newHashMap();
     public static Map<String, String> cityLevelMap = Maps.newHashMap();
 
-    public static String defaultValue = "-10";
+    public static String defaultValue = "0";
     public static int maxCityFrequency=1;
     // 日志中城市出现次数
     public static Map<String, Integer> countCityFrequency = Maps.newHashMap();

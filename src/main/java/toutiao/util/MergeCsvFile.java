@@ -27,7 +27,7 @@ public class MergeCsvFile {
         String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_feature_20170822.txt.csv";
 
 //        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_20170822.txt.csv";
-//        String file2="/home/zhipengwu/secureCRT/test_hotel_feature_20170822.txt";
+//        String file2="/home/zhipengwu/secureCRT/std_test_hotel_feature_20170822.txt";
 //        String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_feature_20170822.txt.csv";
 
         loadPart2Feature(file2);

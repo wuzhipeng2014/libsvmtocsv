@@ -76,4 +76,21 @@ public class FeatureResult {
                 shiftCityname, residentCity);
         return format;
     }
+
+
+    public String printStringByLabel(String lb){
+        if (lb.equalsIgnoreCase(Lable)) {
+            String format = String.format(
+                    "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
+                    Lable, phoneLevel, age, gender, platform, toutiaoActiveDayNum,
+                    shiftCityTotalNum, shiftCityTotal, maxShiftCityNum, avgShiftCityNum, workdayShiftCityCount,
+                    weekendShiftCityCount, weekendShiftCityCountRatio, shfitCityTotalHeat, residentCityLevel,
+                    maxDayActiveRadius, avgDayActiveRadius, DayActiveRadiusRatio, avgWeekendActiveRadius, avgWorkdayActiveRadius, avgActiveRadiusRatio,
+                    shiftAreaToalNum, avgShiftAreaNum, workdayShiftAreaNum, weekendShiftAreaNum, shiftAreaNumRatio, avgWorkdayShiftAreaNum, avgWeekendShiftAreaNum,
+                    shiftCityname, residentCity);
+
+            return format;
+        }
+        return null;
+    }
 }
