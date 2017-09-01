@@ -47,55 +47,55 @@ public class FeatureUtil {
      */
     public static void ConverFreatureResult(FeatureResult featureResult){
         //移动区域个数比值
-//        featureResult.shiftAreaNumRatio=Double.valueOf(featureResult.shiftAreaNumRatio)>1.5?"1.5":featureResult.shiftAreaNumRatio;
+        featureResult.shiftAreaNumRatio=Double.valueOf(featureResult.shiftAreaNumRatio)>3?"4":featureResult.shiftAreaNumRatio;
 
         // 单天最大移动城市个数
-        featureResult.maxShiftCityNum=Double.valueOf(featureResult.maxShiftCityNum)>15?"15":featureResult.maxShiftCityNum;
+        featureResult.maxShiftCityNum=Double.valueOf(featureResult.maxShiftCityNum)>15?"20":featureResult.maxShiftCityNum;
 
         //工作日平均移动区域个数
-        featureResult.avgWorkdayShiftAreaNum=Double.valueOf(featureResult.avgWorkdayShiftAreaNum)>7?"7":featureResult.avgWorkdayShiftAreaNum;
+        featureResult.avgWorkdayShiftAreaNum=Double.valueOf(featureResult.avgWorkdayShiftAreaNum)>7?"10":featureResult.avgWorkdayShiftAreaNum;
 
         //节假日移动城市次数比值
         featureResult.weekendShiftCityCountRatio=Double.valueOf(featureResult.weekendShiftCityCountRatio)>35?"35":featureResult.weekendShiftCityCountRatio;
 
         //平均移动半径比值
-        featureResult.avgActiveRadiusRatio=Double.valueOf(featureResult.avgActiveRadiusRatio)>144?"144":featureResult.avgActiveRadiusRatio;
+        featureResult.avgActiveRadiusRatio=Double.valueOf(featureResult.avgActiveRadiusRatio)>144?"200":featureResult.avgActiveRadiusRatio;
 
         //移动城市热度之和
-        featureResult.shfitCityTotalHeat=Double.valueOf(featureResult.shfitCityTotalHeat)>6?"6":featureResult.shfitCityTotalHeat;
+        featureResult.shfitCityTotalHeat=Double.valueOf(featureResult.shfitCityTotalHeat)>3?"4":featureResult.shfitCityTotalHeat;
 
         //移动区域总数
-        featureResult.shiftAreaToalNum=Double.valueOf(featureResult.shiftAreaToalNum)>68?"68":featureResult.shiftAreaToalNum;
+        featureResult.shiftAreaToalNum=Double.valueOf(featureResult.shiftAreaToalNum)>68?"80":featureResult.shiftAreaToalNum;
 
         //平均移动区域总数
-        featureResult.avgShiftAreaNum=Double.valueOf(featureResult.avgShiftAreaNum)>27?"27":featureResult.avgShiftAreaNum;
+        featureResult.avgShiftAreaNum=Double.valueOf(featureResult.avgShiftAreaNum)>27?"35":featureResult.avgShiftAreaNum;
 
         //移动城市个数
-        featureResult.shiftCityTotalNum=Double.valueOf(featureResult.shiftCityTotalNum)>25?"25":featureResult.shiftCityTotalNum;
+        featureResult.shiftCityTotalNum=Double.valueOf(featureResult.shiftCityTotalNum)>25?"35":featureResult.shiftCityTotalNum;
 
         //跨市移动次数
-        featureResult.shiftCityTotal=Double.valueOf(featureResult.shiftCityTotal)>908.9?"908.9":featureResult.shiftCityTotal;
+        featureResult.shiftCityTotal=Double.valueOf(featureResult.shiftCityTotal)>908.9?"1000":featureResult.shiftCityTotal;
 
         //工作日跨市移动次数
-        featureResult.workdayShiftCityCount=Double.valueOf(featureResult.workdayShiftCityCount)>656.6?"656.6":featureResult.workdayShiftCityCount;
+        featureResult.workdayShiftCityCount=Double.valueOf(featureResult.workdayShiftCityCount)>656.6?"700":featureResult.workdayShiftCityCount;
 
         //节假日平均移动区域个数
-        featureResult.avgWeekendShiftAreaNum=Double.valueOf(featureResult.avgWeekendShiftAreaNum)>10?"10":featureResult.avgWeekendShiftAreaNum;
+        featureResult.avgWeekendShiftAreaNum=Double.valueOf(featureResult.avgWeekendShiftAreaNum)>10?"20":featureResult.avgWeekendShiftAreaNum;
 
         //工作日移动区域个数
-        featureResult.workdayShiftAreaNum=Double.valueOf(featureResult.workdayShiftAreaNum)>860.8?"860.8":featureResult.workdayShiftAreaNum;
+        featureResult.workdayShiftAreaNum=Double.valueOf(featureResult.workdayShiftAreaNum)>55?"100":featureResult.workdayShiftAreaNum;
 
         //平均移动城市个数
-        featureResult.avgShiftCityNum=Double.valueOf(featureResult.avgShiftCityNum)>13?"13":featureResult.avgShiftCityNum;
+        featureResult.avgShiftCityNum=Double.valueOf(featureResult.avgShiftCityNum)>4?"13":featureResult.avgShiftCityNum;
 
         //节假日移动区域个数
-        featureResult.weekendShiftAreaNum=Double.valueOf(featureResult.weekendShiftAreaNum)>328.7?"328.7":featureResult.weekendShiftAreaNum;
+        featureResult.weekendShiftAreaNum=Double.valueOf(featureResult.weekendShiftAreaNum)>35?"50":featureResult.weekendShiftAreaNum;
 
         //节假日移动城市次数
-        featureResult.weekendShiftCityCount=Double.valueOf(featureResult.weekendShiftCityCount)>252.7?"252.7":featureResult.weekendShiftCityCount;
+        featureResult.weekendShiftCityCount=Double.valueOf(featureResult.weekendShiftCityCount)>8?"20":featureResult.weekendShiftCityCount;
 
         //单天活跃半径比值
-//        featureResult.DayActiveRadiusRatio=Double.valueOf(featureResult.DayActiveRadiusRatio)>250?"250":featureResult.DayActiveRadiusRatio;
+        featureResult.DayActiveRadiusRatio=Double.valueOf(featureResult.DayActiveRadiusRatio)>250?"300":featureResult.DayActiveRadiusRatio;
 
     }
 

@@ -73,7 +73,7 @@ public class ToutiaoFeatureMining {
                 // TODO: 17-8-31
 //                String result = formatedFeatureResult.toString();
 //                String result = featureResult.toString();
-                String result = featureResult.printStringByLabel("1");
+                String result = featureResult.printStringByLabel("0");
 
                 if (!Strings.isNullOrEmpty(result)) {
                     fw.append(result + "\n");
