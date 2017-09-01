@@ -29,7 +29,7 @@ public class ToutiaoFeatureMining {
         Gson gson = new GsonBuilder().create();
         // String phonePriceFile="/home/q/zhipeng.wu/logData/toutiao/train/phone_price_result_20170823.txt";
 
-        String inputfileName = "/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_20170822.txt";
+        String inputfileName = "/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_20170822.txt";
         String outputFileName = String.format("%s.csv", inputfileName);
         String phonePriceFile = "/home/zhipengwu/work/toutiao/Libsvmtocsv/src/main/resources/toutiao/phone_price_result_20170823.txt";
         String cityLevelFile = "/home/zhipengwu/work/toutiao/Libsvmtocsv/src/main/resources/toutiao/city_level.txt";
@@ -66,14 +66,14 @@ public class ToutiaoFeatureMining {
                 FeatureUtil.ConverFreatureResult(featureResult);
 
 
-//                FeatureUtil.cloneFeaturetoFormatedFeatureResult(featureResult, formatedFeatureResult);
-//                FeatureUtil.convertmajorFeaturetoVector(featureResult, formatedFeatureResult);
+                FeatureUtil.cloneFeaturetoFormatedFeatureResult(featureResult, formatedFeatureResult);
+                FeatureUtil.convertmajorFeaturetoVector(featureResult, formatedFeatureResult);
 
 
                 // TODO: 17-8-31
-//                String result = formatedFeatureResult.toString();
+                String result = formatedFeatureResult.toString();
 //                String result = featureResult.toString();
-                String result = featureResult.printStringByLabel("0");
+//                String result = featureResult.printStringByLabel("0");
 
                 if (!Strings.isNullOrEmpty(result)) {
                     fw.append(result + "\n");

@@ -25,8 +25,7 @@ public class FormatedFeatureResult {
     public String weekendShiftCityCountRatio;
     // 节假日|工作日平均移动半径比值
     public String avgActiveRadiusRatio;
-    //节假日|工作日 移动区域个数比值
-    public String shiftAreaNumRatio;
+
 
     //工作日移动区域个数
     public String workdayShiftAreaNum;
@@ -38,6 +37,8 @@ public class FormatedFeatureResult {
     public String residentCity;
 
 
+    //节假日|工作日 移动区域个数比值
+    public List<String> shiftAreaNumRatioVector;
     public List<String> shiftCityTotalNumVector; //到达过的城市个数
     public List<String> maxShiftCityNumVector;
     public List<String> shiftCityTotalVector; //移动城市次数
@@ -82,10 +83,11 @@ public class FormatedFeatureResult {
         result.add(toutiaoActiveDayNum);
         result.add(weekendShiftCityCountRatio);
         result.add(avgActiveRadiusRatio);
-        result.add(shiftAreaNumRatio);
         result.add(workdayShiftAreaNum);
         result.add(weekendShiftAreaNum);
 
+
+        result.addAll(shiftAreaNumRatioVector);
         result.addAll(shiftCityTotalNumVector);
         result.addAll(maxShiftCityNumVector);
         result.addAll(shiftCityTotalVector);

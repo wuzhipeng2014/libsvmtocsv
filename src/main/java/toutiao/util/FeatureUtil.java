@@ -104,9 +104,14 @@ public class FeatureUtil {
      * @param featureResult
      */
     public static void convertmajorFeaturetoVector(FeatureResult featureResult, FormatedFeatureResult formatedFeatureResult){
+        //移动区域个数比值
+        List<Double> radiusBorderList= Arrays.asList(0.28,0.55);
+        List<String> shiftAreaNumRatioVector = convertoVector(featureResult.shiftAreaNumRatio, radiusBorderList);
+        formatedFeatureResult.shiftAreaNumRatioVector=shiftAreaNumRatioVector;
+
 
         //单天平均活动半径
-        List<Double> radiusBorderList= Arrays.asList(6.5, 8.15, 9.82,11.45,13.09);
+        radiusBorderList= Arrays.asList(6.5, 8.18, 9.82,11.45,13.09);
         List<String> avgDayActiveRadiusVector = convertoVector(featureResult.avgDayActiveRadius, radiusBorderList);
         formatedFeatureResult.avgDayActiveRadiusVector=avgDayActiveRadiusVector;
 
@@ -121,27 +126,27 @@ public class FeatureUtil {
         formatedFeatureResult.avgWeekendActiveRadiusVector=avgWeekendActiveRadiusVector;
 
         //工作日平均移动区域个数
-        radiusBorderList= Arrays.asList(1.02);
+        radiusBorderList= Arrays.asList(1.0,1.34);
         List<String> avgWorkdayShiftAreaNumVector = convertoVector(featureResult.avgWorkdayShiftAreaNum, radiusBorderList);
         formatedFeatureResult.avgWorkdayShiftAreaNumVector=avgWorkdayShiftAreaNumVector;
 
         //常住地城市等级
-        radiusBorderList= Arrays.asList(2.2,3.0,4.0,5.0,5.5);
+        radiusBorderList= Arrays.asList(2.0,3.0,4.0,5.0,5.5);
         List<String> residentCityLevelVector = convertoVector(featureResult.residentCityLevel, radiusBorderList);
         formatedFeatureResult.residentCityLevelVector=residentCityLevelVector;
 
         //单天最大活跃半径
-        radiusBorderList= Arrays.asList(6.52,8.16,9.79,11.47,13.11);
+        radiusBorderList= Arrays.asList(1.63,6.52,8.16,9.79,11.47,13.11);
         List<String> maxDayActiveRadiusVector = convertoVector(featureResult.maxDayActiveRadius, radiusBorderList);
         formatedFeatureResult.maxDayActiveRadiusVector=maxDayActiveRadiusVector;
 
         //移动的城市热度之和
-        radiusBorderList= Arrays.asList(0.6,1.2,1.8);
+        radiusBorderList= Arrays.asList(0.4,0.8,1.2,1.6);
         List<String> shfitCityTotalHeatVector = convertoVector(featureResult.shfitCityTotalHeat, radiusBorderList);
         formatedFeatureResult.shfitCityTotalHeatVector=shfitCityTotalHeatVector;
 
         //移动区域总个数
-        radiusBorderList= Arrays.asList(6.9,12.8);
+        radiusBorderList= Arrays.asList(6.8,8.9);
         List<String> shiftAreaToalNumVector = convertoVector(featureResult.shiftAreaToalNum, radiusBorderList);
         formatedFeatureResult.shiftAreaToalNumVector=shiftAreaToalNumVector;
 
@@ -158,31 +163,31 @@ public class FeatureUtil {
         //头条活跃天数
 
         //出现过的城市总个数
-        radiusBorderList= Arrays.asList(3.4,5.8);
+        radiusBorderList= Arrays.asList(4.4,7.8);
         List<String> shiftCityTotalNumVector = convertoVector(featureResult.shiftCityTotalNum, radiusBorderList);
         formatedFeatureResult.shiftCityTotalNumVector=shiftCityTotalNumVector;
         //城市间移动总次数
-        radiusBorderList= Arrays.asList(3.0,6.0,9.0);
+        radiusBorderList= Arrays.asList(27.3);
         List<String> shiftCityTotalVector = convertoVector(featureResult.shiftCityTotal, radiusBorderList);
         formatedFeatureResult.shiftCityTotalVector=shiftCityTotalVector;
 
         //工作日城市间移动次数
-        radiusBorderList= Arrays.asList(3.0,6.0,9.0);
+        radiusBorderList= Arrays.asList(20.0);
         List<String> workdayShiftCityCountVector = convertoVector(featureResult.workdayShiftCityCount, radiusBorderList);
         formatedFeatureResult.workdayShiftCityCountVector=workdayShiftCityCountVector;
 
         //节假日平均移动区域个数
-        radiusBorderList= Arrays.asList(1.06,1.2);
+        radiusBorderList= Arrays.asList(0.7,1.06,1.41);
         List<String> avgWeekendShiftAreaNumVector = convertoVector(featureResult.avgWeekendShiftAreaNum, radiusBorderList);
         formatedFeatureResult.avgWeekendShiftAreaNumVector=avgWeekendShiftAreaNumVector;
 
         //节假日城市间移动次数
-        radiusBorderList= Arrays.asList(1.0,2.0,3.0,4.0);
+        radiusBorderList= Arrays.asList(2.0,4.0,6.0);
         List<String> weekendShiftCityCountVector = convertoVector(featureResult.weekendShiftCityCount, radiusBorderList);
         formatedFeatureResult.weekendShiftCityCountVector=weekendShiftCityCountVector;
 
         //单天移动半径比值
-        radiusBorderList= Arrays.asList(234.85);
+        radiusBorderList= Arrays.asList(30.0,60.0);
         List<String> DayActiveRadiusRatioVector = convertoVector(featureResult.DayActiveRadiusRatio, radiusBorderList);
         formatedFeatureResult.DayActiveRadiusRatioVector=DayActiveRadiusRatioVector;
 
@@ -203,7 +208,7 @@ public class FeatureUtil {
         formatedFeatureResult.toutiaoActiveDayNum=featureResult.toutiaoActiveDayNum;
         formatedFeatureResult.weekendShiftCityCountRatio=featureResult.weekendShiftCityCountRatio;
         formatedFeatureResult.avgActiveRadiusRatio=featureResult.avgActiveRadiusRatio;
-        formatedFeatureResult.shiftAreaNumRatio=featureResult.shiftAreaNumRatio;
+//        formatedFeatureResult.shiftAreaNumRatio=featureResult.shiftAreaNumRatio;
         formatedFeatureResult.weekendShiftAreaNum=featureResult.weekendShiftAreaNum;
         formatedFeatureResult.workdayShiftAreaNum=featureResult.workdayShiftAreaNum;
     }
