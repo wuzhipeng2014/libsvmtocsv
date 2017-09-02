@@ -21,14 +21,14 @@ public class MergeCsvFile {
 
     public static Map<String,String> part2FeatureMap=Maps.newHashMap();
     public static void main(String[] args) {
-//        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_20170822.txt.csv";
-////        String file2="/home/zhipengwu/secureCRT/train_hotel_feature_20170822.txt";
-//        String file2="/home/zhipengwu/secureCRT/std_train_hotel_feature_20170822.txt";
-//        String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_feature_20170822.txt.csv";
+        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_20170822.txt.csv";
+//        String file2="/home/zhipengwu/secureCRT/train_hotel_feature_20170822.txt";
+        String file2="/home/zhipengwu/secureCRT/std_train_hotel_feature_20170822.txt";
+        String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_feature_20170822.txt.csv";
 
-        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_20170822.txt.csv";
-        String file2="/home/zhipengwu/secureCRT/std_test_hotel_feature_20170822.txt";
-        String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_feature_20170822.txt.csv";
+//        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_20170822.txt.csv";
+//        String file2="/home/zhipengwu/secureCRT/std_test_hotel_feature_20170822.txt";
+//        String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_feature_20170822.txt.csv";
 
         loadPart2Feature(file2);
 
