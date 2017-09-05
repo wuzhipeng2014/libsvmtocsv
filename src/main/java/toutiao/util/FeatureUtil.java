@@ -186,6 +186,11 @@ public class FeatureUtil {
 //        formatedFeatureResult.shiftCityTotalNumVector=shiftCityTotalNumVector;
         formatedFeatureResult.shiftCityTotalNumVector=Arrays.asList(featureResult.shiftCityTotalNum);
 
+        //平均活跃区域个数
+        radiusBorderList= Arrays.asList(1.4);
+        List<String> avgShiftAreaNumVector = convertoVector(featureResult.avgShiftAreaNum, radiusBorderList);
+        formatedFeatureResult.avgShiftAreaNumVector=avgShiftAreaNumVector;
+
 
         //城市间移动总次数
         radiusBorderList= Arrays.asList(27.3);
@@ -237,7 +242,7 @@ public class FeatureUtil {
         formatedFeatureResult.keyid=featureResult.keyid;
         formatedFeatureResult.Lable=featureResult.Lable;
 //        formatedFeatureResult.avgShiftCityNum=featureResult.avgShiftCityNum;
-        formatedFeatureResult.avgShiftAreaNum=featureResult.avgShiftAreaNum;
+//        formatedFeatureResult.avgShiftAreaNum=featureResult.avgShiftAreaNum;
         formatedFeatureResult.gender=featureResult.gender;
         formatedFeatureResult.platform=featureResult.platform;
         formatedFeatureResult.shiftCityname=featureResult.shiftCityname;

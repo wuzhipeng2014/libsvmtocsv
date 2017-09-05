@@ -19,7 +19,10 @@ public class FormatedFeatureResult {
 
     public String age;
     public List<String> avgShiftCityNumVector;
-    public String avgShiftAreaNum;
+
+    // 平均移动区域个数
+    public List<String> avgShiftAreaNumVector;
+
     public String toutiaoActiveDayNum;
     // 工作日跨市移动次数/周末跨市移动次数
     public String weekendShiftCityCountRatio;
@@ -79,7 +82,7 @@ public class FormatedFeatureResult {
         result.add(platform);
         result.add(age);
         result.addAll(avgShiftCityNumVector);
-        result.add(avgShiftAreaNum);
+        result.addAll(avgShiftAreaNumVector);
         result.add(toutiaoActiveDayNum);
         result.add(weekendShiftCityCountRatio);
         result.add(avgActiveRadiusRatio);
