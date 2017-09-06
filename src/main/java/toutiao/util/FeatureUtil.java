@@ -164,11 +164,11 @@ public class FeatureUtil {
         formatedFeatureResult.maxShiftCityNumVector=Arrays.asList(featureResult.maxShiftCityNum);
 
 //
-//        //节假日平均活动半径
-//        radiusBorderList= Arrays.asList(6.27,7.84,9.41,10.98,12.54);
-//        List<String> avgWeekendActiveRadiusVector = convertoVector(featureResult.avgWeekendActiveRadius, radiusBorderList);
-//        formatedFeatureResult.avgWeekendActiveRadiusVector=avgWeekendActiveRadiusVector;
-        formatedFeatureResult.avgWeekendActiveRadiusVector=Arrays.asList(featureResult.avgWeekendActiveRadius);
+        //节假日平均活动半径
+        radiusBorderList= Arrays.asList(6.27,10.98,12.54);
+        List<String> avgWeekendActiveRadiusVector = convertoVector(featureResult.avgWeekendActiveRadius, radiusBorderList);
+        formatedFeatureResult.avgWeekendActiveRadiusVector=avgWeekendActiveRadiusVector;
+//        formatedFeatureResult.avgWeekendActiveRadiusVector=Arrays.asList(featureResult.avgWeekendActiveRadius);
 
 
         //工作日平均移动区域个数
@@ -185,7 +185,7 @@ public class FeatureUtil {
 //
         //单天最大活跃半径
 //        radiusBorderList= Arrays.asList(1.63,6.52,8.16,9.79,11.47,13.11);
-        radiusBorderList= Arrays.asList(11.47,13.11);
+        radiusBorderList= Arrays.asList(1.64,8.2,11.47,13.11);
         List<String> maxDayActiveRadiusVector = convertoVector(featureResult.maxDayActiveRadius, radiusBorderList);
         formatedFeatureResult.maxDayActiveRadiusVector=maxDayActiveRadiusVector;
 //
