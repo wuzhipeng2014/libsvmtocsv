@@ -19,6 +19,9 @@ public class FeatureUtil {
      * @return
      */
     public static  List<String> convertoVector(String value,List<Double> borderList){
+//        String vectorValue=value;
+        String vectorValue="1";
+
         List<String> vector= Lists.newArrayList();
         int size = borderList.size();
         for (int i = 0; i < size+1; i++) {
@@ -27,19 +30,55 @@ public class FeatureUtil {
         boolean isDone=false;
         for (int i = 0; i < size; i++) {
             if (Double.valueOf(value)<borderList.get(i)){
-                vector.set(i,"1");
+                vector.set(i,vectorValue);
                 isDone=true;
                break;
             }
         }
         if (!isDone){
-            vector.set(size,"1");
+            vector.set(size,vectorValue);
         }else {
             vector.set(size,"0");
         }
 
         return vector;
     }
+
+
+    /**
+     * 将单个特征根据取值区间拆分为多个特征
+     * @param value
+     * @param borderList
+     * @return
+     */
+    public static  List<String> splittoVector(String value,List<Double> borderList){
+        String vectorValue=value;
+//        String vectorValue="1";
+        List<String> vector= Lists.newArrayList();
+        int size = borderList.size();
+        for (int i = 0; i < size+1; i++) {
+            vector.add("0");
+        }
+        boolean isDone=false;
+        for (int i = 0; i < size; i++) {
+            if (Double.valueOf(value)<borderList.get(i)){
+                vector.set(i,vectorValue);
+                isDone=true;
+                break;
+            }
+        }
+        if (!isDone){
+            vector.set(size,vectorValue);
+        }else {
+            vector.set(size,"0");
+        }
+
+        return vector;
+    }
+
+
+
+
 
     /**
      * 改变FeatureResult中的某些特征的异常大的值

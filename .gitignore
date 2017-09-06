@@ -14,3 +14,7 @@
 hs_err_pid*
 *.xml
 
+*.pyc
+target/*
+src/main/resources/*
+model_frequency.txt
