@@ -10,7 +10,8 @@ import java.util.List;
  */
 public class FormatedFeatureResult {
 
-    public FormatedFeatureResult(){}
+    public FormatedFeatureResult() {
+    }
 
     public String keyid;
     public String Lable;
@@ -29,22 +30,20 @@ public class FormatedFeatureResult {
     // 节假日|工作日平均移动半径比值
     public String avgActiveRadiusRatio;
 
-
-    //工作日移动区域个数
+    // 工作日移动区域个数
     public String workdayShiftAreaNum;
 
-    //节假日移动区域个数
+    // 节假日移动区域个数
     public String weekendShiftAreaNum;
 
     public String shiftCityname;
     public String residentCity;
 
-
-    //节假日|工作日 移动区域个数比值
+    // 节假日|工作日 移动区域个数比值
     public List<String> shiftAreaNumRatioVector;
-    public List<String> shiftCityTotalNumVector; //到达过的城市个数
+    public List<String> shiftCityTotalNumVector; // 到达过的城市个数
     public List<String> maxShiftCityNumVector;
-    public List<String> shiftCityTotalVector; //移动城市次数
+    public List<String> shiftCityTotalVector; // 移动城市次数
     public List<String> maxDayActiveRadiusVector;
     public List<String> avgDayActiveRadiusVector;
     public List<String> DayActiveRadiusRatioVector;
@@ -60,7 +59,7 @@ public class FormatedFeatureResult {
     public List<String> weekendShiftCityCountVector;
 
     // 移动城市热度之和
-    public List<String> shfitCityTotalHeatVector ;
+    public List<String> shfitCityTotalHeatVector;
     // 常住地城市等级
     public List<String> residentCityLevelVector;
     // 节假日平均移动半径
@@ -70,12 +69,11 @@ public class FormatedFeatureResult {
 
     public List<String> avgWorkdayShiftAreaNumVector;
 
-    public List<String> avgWeekendShiftAreaNumVector ;
-
+    public List<String> avgWeekendShiftAreaNumVector;
 
     @Override
     public String toString() {
-        List<String> result= Lists.newArrayList();
+        List<String> result = Lists.newArrayList();
         result.add(keyid);
         result.add(Lable);
         result.add(gender);
@@ -89,7 +87,6 @@ public class FormatedFeatureResult {
         result.add(workdayShiftAreaNum);
         result.add(weekendShiftAreaNum);
 
-
         result.addAll(shiftAreaNumRatioVector);
         result.addAll(shiftCityTotalNumVector);
         result.addAll(maxShiftCityNumVector);
@@ -98,7 +95,7 @@ public class FormatedFeatureResult {
         result.addAll(avgDayActiveRadiusVector);
         try {
             result.addAll(DayActiveRadiusRatioVector);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println();
         }
         result.addAll(phoneLevelVector);
@@ -112,13 +109,36 @@ public class FormatedFeatureResult {
         result.addAll(avgWorkdayShiftAreaNumVector);
         result.addAll(avgWeekendShiftAreaNumVector);
 
-
-
-
         result.add(shiftCityname);
         result.add(residentCity);
 
-
         return Joiner.on(",").skipNulls().join(result);
+    }
+
+    /**
+     * 将添加的新特征转换为csv格式
+     * 
+     * @return
+     */
+    public String newFeatureToString() {
+        List<String> result = Lists.newArrayList();
+        result.add(keyid);
+        result.add(Lable);
+        result.addAll(phoneLevelVector);
+        result.addAll(residentCityLevelVector);
+        result.addAll(shfitCityTotalHeatVector);
+        // 单天移动区域个数比值
+        result.addAll(shiftAreaNumRatioVector);
+
+        //单天移动区域个数 中值
+        result.addAll(avgShiftAreaNumVector);
+
+
+        // 2. 工作日/节假日跨市移动次数最大比值
+
+        // 3. 最大活动半径/平均活动半径 比值
+
+        return Joiner.on("\t").skipNulls().join(result);
+
     }
 }

@@ -160,6 +160,11 @@ public class FeatureUtil {
      * 
      * @param featureResult
      */
+    /**
+     * 将正负例中分布差异较大的特征转换为向量
+     *
+     * @param featureResult
+     */
     public static void convertmajorFeaturetoVector(FeatureResult featureResult,
             FormatedFeatureResult formatedFeatureResult) {
         // 移动区域个数比值

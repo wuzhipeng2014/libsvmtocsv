@@ -21,20 +21,29 @@ public class MergeCsvFile {
 
     public static Map<String,String> part2FeatureMap=Maps.newHashMap();
     public static void main(String[] args) {
-//        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_20170822.txt.csv";
-////        String file2="/home/zhipengwu/secureCRT/train_hotel_feature_20170822.txt";
-//        String file2="/home/zhipengwu/secureCRT/std_train_hotel_feature_20170822.txt";
-////        String file2="/home/zhipengwu/secureCRT/std_train_hotel_feature_20170822_09-06-2.txt";
-//        String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_feature_20170822.txt.csv";
+        AnalysisFeature.main(null);
 
-        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_20170822.txt.csv";
+//        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_20170822.txt.csv";
+        String file1="/home/zhipengwu/secureCRT/part_origin_feature_20170822_09-07-2.txt_all.csv";
+//        String file2="/home/zhipengwu/secureCRT/train_hotel_feature_20170822.txt";
+        String file2="/home/zhipengwu/secureCRT/std_train_hotel_feature_20170822.txt";
+//        String file2="/home/zhipengwu/secureCRT/std_train_hotel_feature_20170822_09-06-2.txt";
+        String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_feature_20170822.txt.csv";
+
+//        String file1="/home/zhipengwu/secureCRT/part_origin_feature_20170822_09-07-2.txt_all.csv";
+////        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_20170822.txt.csv";
 //        String file2="/home/zhipengwu/secureCRT/std_test_hotel_feature_20170822.txt";
-        String file2="/home/zhipengwu/secureCRT/std_test_feature_20170822_20170906.txt_all.csv";
-        String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_feature_20170822.txt.csv";
+//        String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_feature_20170822.txt.csv";
 
         loadPart2Feature(file2);
 
-        joinFile(file1,outfile);
+        joinFile1(file1,outfile);
+
+        part2FeatureMap.clear();
+        String newFeature="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_20170822.txt.csv";
+        String resultFile="/home/zhipengwu/secureCRT/toutiao_hotel_combine_feature_20170822.csv";
+        loadPart2Feature(newFeature);
+        joinFile(outfile,resultFile);
 
     }
 
@@ -54,6 +63,24 @@ public class MergeCsvFile {
         }
 
     }
+
+    public static void loadPart3Feature(String file2){
+        try {
+            LineIterator lineIterator2 = FileUtils.lineIterator(new File(file2));
+            while (lineIterator2.hasNext()){
+                String line =lineIterator2.nextLine();
+                String[] split = line.split(",");
+                String keyid=split[0];
+                part2FeatureMap.put(keyid,line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
 
     /**
      * 将两个文件合csv文件按行合并在一起
@@ -116,6 +143,57 @@ public class MergeCsvFile {
                     sb.append("C1,C2\n");
                     fw.append(sb);
                 }
+
+                fw.append(join+"\n");
+            }
+            fw.flush();
+            fw.close();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void joinFile1(String file1,String outputFile){
+        try {
+            LineIterator lineIterator1 = FileUtils.lineIterator(new File(file1));
+            FileWriter fw=new FileWriter(outputFile);
+//            fw.append(FeatureResult.header+"\n");
+            boolean addHeader=true;
+            List<String> list= Lists.newArrayList();
+            while (lineIterator1.hasNext()){
+                String line1 = lineIterator1.nextLine();
+                String[] split1 = line1.split(",");
+                String keyid=split1[0];
+                String[] split2 =null;
+                String line2 = part2FeatureMap.get(keyid);
+                String[] resultPart2=null;
+                if (!Strings.isNullOrEmpty(line2)){
+                    split2 = line2.split("\t");
+                    //todo
+                    resultPart2=Arrays.copyOfRange(split2,2,split2.length);
+                }
+
+                List<String> resultList=Lists.newArrayList();
+                int k=1;
+                for (k = 0; k < split1.length-2; k++) {
+                    resultList.add(split1[k]);
+                }
+                for (int i = 0; i < resultPart2.length; i++) {
+                    resultList.add(resultPart2[i]);
+                }
+                for ( ; k < split1.length; k++) {
+                    resultList.add(split1[k]);
+                }
+
+
+
+
+
+                String join = Joiner.on(",").skipNulls().join(resultList);
+
 
                 fw.append(join+"\n");
             }
