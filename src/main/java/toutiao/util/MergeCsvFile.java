@@ -21,13 +21,16 @@ public class MergeCsvFile {
 
     public static Map<String,String> part2FeatureMap=Maps.newHashMap();
     public static void main(String[] args) {
+        //step1. 生成原始特征
         AnalysisFeature.main(null);
 
+
+        //step2. 原始特征和琳姐的特征合并
 //        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_20170822.txt.csv";
         String file1="/home/zhipengwu/secureCRT/part_origin_feature_20170822_09-07-2.txt_all.csv";
-//        String file2="/home/zhipengwu/secureCRT/train_hotel_feature_20170822.txt";
-        String file2="/home/zhipengwu/secureCRT/std_train_hotel_feature_20170822.txt";
-//        String file2="/home/zhipengwu/secureCRT/std_train_hotel_feature_20170822_09-06-2.txt";
+//        String file2="/home/zhipengwu/secureCRT/std_train_hotel_feature_20170822.txt";
+        String file2="/home/zhipengwu/secureCRT/std_train_hotel_feature_20170822_09-08-1.txt";
+
         String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_feature_20170822.txt.csv";
 
 //        String file1="/home/zhipengwu/secureCRT/part_origin_feature_20170822_09-07-2.txt_all.csv";
@@ -36,9 +39,9 @@ public class MergeCsvFile {
 //        String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_feature_20170822.txt.csv";
 
         loadPart2Feature(file2);
-
         joinFile1(file1,outfile);
 
+        //step3. 原始特征和我的新特征合并
         part2FeatureMap.clear();
         String newFeature="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_20170822.txt.csv";
         String resultFile="/home/zhipengwu/secureCRT/toutiao_hotel_combine_feature_20170822.csv";
