@@ -2,6 +2,7 @@ package toutiao.util;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.junit.Test;
@@ -14,8 +15,6 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
-
-import static toutiao.util.FeatureUtil.convertoVector;
 
 /**
  * Created by zhipengwu on 17-9-6.
@@ -49,24 +48,22 @@ public class AnalysisFeature {
                         String lable = split[1];
 
                         int len = split.length;
-//                         split[0]=null; //keyid
+                        // split[0]=null; //keyid
                         split[len - 2] = split[len - 2].replaceAll(",", "#").replaceAll(" ", "");
                         split[len - 1] = split[len - 1].replaceAll(",", "#").replaceAll(" ", ""); // allCityName
 
+                        // ===========================特征进行分段处理===========================================
 
-                        //===========================特征进行分段处理===========================================
+                        // FormatedOriginFeature formatedOriginFeature=new FormatedOriginFeature();
+                        // // 将正负例差异较大的特征 分段 转换位向量
+                        // OriginFeature originFeature = convertMajorFeatruretoVector(split, formatedOriginFeature);
+                        // //将其他向量拷贝到FormatedOriginFeature
+                        // cloneFeaturetoFormatedOriginFeature(originFeature,formatedOriginFeature);
+                        //
+                        // //将formatedOriginFeature 转换为csv文件
+                        // String join = formatedOriginFeature.toCsv();
 
-//                        FormatedOriginFeature formatedOriginFeature=new FormatedOriginFeature();
-//                        // 将正负例差异较大的特征 分段 转换位向量
-//                        OriginFeature originFeature = convertMajorFeatruretoVector(split, formatedOriginFeature);
-//                        //将其他向量拷贝到FormatedOriginFeature
-//                        cloneFeaturetoFormatedOriginFeature(originFeature,formatedOriginFeature);
-//
-//                        //将formatedOriginFeature 转换为csv文件
-//                        String join = formatedOriginFeature.toCsv();
-
-                        //==================================================================================
-
+                        // ==================================================================================
 
                         String join = Joiner.on(",").skipNulls().join(split);
 
@@ -96,56 +93,60 @@ public class AnalysisFeature {
         }
     }
 
-    public static OriginFeature convertMajorFeatruretoVector(String[] split, FormatedOriginFeature formatedOriginFeature) {
+    public static OriginFeature convertMajorFeatruretoVector(String[] split,
+            FormatedOriginFeature formatedOriginFeature) {
         OriginFeature originFeature = OriginFeature.createOriginFeature(split);
+        List<Double> borderList = Lists.newArrayList();
 
         // 1.citeNum
-        List<Double> borderList = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
-        List<String> citeNumVector = convertoVector(originFeature.citeNum, borderList);
-        formatedOriginFeature.citeNumVector = citeNumVector;
+        // List<Double> borderList = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
+        // List<String> citeNumVector = convertoVector(originFeature.citeNum, borderList);
+        // formatedOriginFeature.citeNumVector = citeNumVector;
+        formatedOriginFeature.citeNumVector = Arrays.asList(originFeature.citeNum);
 
-        //2.areaNum
-        borderList = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0, 6.0,7.0,8.0,9.0);
-        List<String> areaNumVector = convertoVector(originFeature.areaNum, borderList);
-        formatedOriginFeature.areaNumVector = areaNumVector;
+        // 2.areaNum
+        // borderList = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0, 6.0,7.0,8.0,9.0);
+        // List<String> areaNumVector = convertoVector(originFeature.areaNum, borderList);
+        // formatedOriginFeature.areaNumVector = areaNumVector;
+        formatedOriginFeature.areaNumVector = Arrays.asList(originFeature.areaNum);
+
         return originFeature;
 
     }
 
-
-    public static void cloneFeaturetoFormatedOriginFeature(OriginFeature originFeature,FormatedOriginFeature formatedOriginFeature){
-        formatedOriginFeature.keyid=originFeature.keyid;
-        formatedOriginFeature.label=originFeature.label;
-        formatedOriginFeature.activeDays=originFeature.activeDays;
-        formatedOriginFeature.activeWeeks=originFeature.activeWeeks;
-        formatedOriginFeature.activeDaysOfTopCity=originFeature.activeDaysOfTopCity;
-        formatedOriginFeature.activeDaysOfEndCity=originFeature.activeDaysOfEndCity;
-        formatedOriginFeature.gender=originFeature.gender;
-        formatedOriginFeature.age=originFeature.age;
-        formatedOriginFeature.platform=originFeature.platform;
-//        formatedOriginFeature.citeNum=originFeature.citeNum;
-//        formatedOriginFeature.areaNum=originFeature.areaNum;
-        formatedOriginFeature.shiftCitys0=originFeature.shiftCitys0;
-        formatedOriginFeature.shiftCitys1=originFeature.shiftCitys1;
-        formatedOriginFeature.shiftCitysOnWorkingDay0=originFeature.shiftCitysOnWorkingDay0;
-        formatedOriginFeature.shiftCitysOnWorkingDay1=originFeature.shiftCitysOnWorkingDay1;
-        formatedOriginFeature.shiftCitysOnWeekend0=originFeature.shiftCitysOnWeekend0;
-        formatedOriginFeature.shiftCitysOnWeekend1=originFeature.shiftCitysOnWeekend1;
-        formatedOriginFeature.avgActiveRadius0=originFeature.avgActiveRadius0;
-        formatedOriginFeature.avgActiveRadius1=originFeature.avgActiveRadius1;
-        formatedOriginFeature.maxActiveRadius0=originFeature.maxActiveRadius0;
-        formatedOriginFeature.maxActiveRadius1=originFeature.maxActiveRadius1;
-        formatedOriginFeature.avgActiveRadiusOnWorkingDay0=originFeature.avgActiveRadiusOnWorkingDay0;
-        formatedOriginFeature.avgActiveRadiusOnWorkingDay1=originFeature.avgActiveRadiusOnWorkingDay1;
-        formatedOriginFeature.maxActiveRadiusOnWorkingDay0=originFeature.maxActiveRadiusOnWorkingDay0;
-        formatedOriginFeature.maxActiveRadiusOnWorkingDay1=originFeature.maxActiveRadiusOnWorkingDay1;
-        formatedOriginFeature.avgActiveRadiusOnWeekend0=originFeature.avgActiveRadiusOnWeekend0;
-        formatedOriginFeature.avgActiveRadiusOnWeekend1=originFeature.avgActiveRadiusOnWeekend1;
-        formatedOriginFeature.maxActiveRadiusOnWeekend0=originFeature.maxActiveRadiusOnWeekend0;
-        formatedOriginFeature.maxActiveRadiusOnWeekend1=originFeature.maxActiveRadiusOnWeekend1;
-        formatedOriginFeature.model=originFeature.model;
-        formatedOriginFeature.allCity=originFeature.allCity;
-
+    public static void cloneFeaturetoFormatedOriginFeature(OriginFeature originFeature,
+            FormatedOriginFeature formatedOriginFeature) {
+        formatedOriginFeature.keyid = originFeature.keyid;
+        formatedOriginFeature.label = originFeature.label;
+        formatedOriginFeature.activeDays = originFeature.activeDays;
+        formatedOriginFeature.activeWeeks = originFeature.activeWeeks;
+        formatedOriginFeature.activeDaysOfTopCity = originFeature.activeDaysOfTopCity;
+        formatedOriginFeature.activeDaysOfEndCity = originFeature.activeDaysOfEndCity;
+        formatedOriginFeature.gender = originFeature.gender;
+        formatedOriginFeature.age = originFeature.age;
+        formatedOriginFeature.platform = originFeature.platform;
+        // formatedOriginFeature.citeNum=originFeature.citeNum;
+        // formatedOriginFeature.areaNum=originFeature.areaNum;
+        formatedOriginFeature.shiftCitys0 = originFeature.shiftCitys0;
+        formatedOriginFeature.shiftCitys1 = originFeature.shiftCitys1;
+        formatedOriginFeature.shiftCitysOnWorkingDay0 = originFeature.shiftCitysOnWorkingDay0;
+        formatedOriginFeature.shiftCitysOnWorkingDay1 = originFeature.shiftCitysOnWorkingDay1;
+        formatedOriginFeature.shiftCitysOnWeekend0 = originFeature.shiftCitysOnWeekend0;
+        formatedOriginFeature.shiftCitysOnWeekend1 = originFeature.shiftCitysOnWeekend1;
+        formatedOriginFeature.avgActiveRadius0 = originFeature.avgActiveRadius0;
+        formatedOriginFeature.avgActiveRadius1 = originFeature.avgActiveRadius1;
+        formatedOriginFeature.maxActiveRadius0 = originFeature.maxActiveRadius0;
+        formatedOriginFeature.maxActiveRadius1 = originFeature.maxActiveRadius1;
+        formatedOriginFeature.avgActiveRadiusOnWorkingDay0 = originFeature.avgActiveRadiusOnWorkingDay0;
+        formatedOriginFeature.avgActiveRadiusOnWorkingDay1 = originFeature.avgActiveRadiusOnWorkingDay1;
+        formatedOriginFeature.maxActiveRadiusOnWorkingDay0 = originFeature.maxActiveRadiusOnWorkingDay0;
+        formatedOriginFeature.maxActiveRadiusOnWorkingDay1 = originFeature.maxActiveRadiusOnWorkingDay1;
+        formatedOriginFeature.avgActiveRadiusOnWeekend0 = originFeature.avgActiveRadiusOnWeekend0;
+        formatedOriginFeature.avgActiveRadiusOnWeekend1 = originFeature.avgActiveRadiusOnWeekend1;
+        formatedOriginFeature.maxActiveRadiusOnWeekend0 = originFeature.maxActiveRadiusOnWeekend0;
+        formatedOriginFeature.maxActiveRadiusOnWeekend1 = originFeature.maxActiveRadiusOnWeekend1;
+        formatedOriginFeature.model = originFeature.model;
+        formatedOriginFeature.allCity = originFeature.allCity;
 
     }
 
