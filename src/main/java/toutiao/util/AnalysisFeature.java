@@ -118,8 +118,39 @@ public class AnalysisFeature {
         formatedOriginFeature.activeWeeks = segmentFeature(originFeature.activeWeeks, borderList);
 
         //maxActiveRadiusOnWorkingDay0
-        borderList = Arrays.asList(1.03,4.14,12.76,25.66,71.135);
-        formatedOriginFeature.maxActiveRadiusOnWorkingDay0= segmentFeature(originFeature.maxActiveRadiusOnWorkingDay0, borderList);
+//        borderList = Arrays.asList(1.03,4.14,12.76,25.66,71.135);
+//        formatedOriginFeature.maxActiveRadiusOnWorkingDay0= segmentFeature(originFeature.maxActiveRadiusOnWorkingDay0, borderList);
+        formatedOriginFeature.maxActiveRadiusOnWorkingDay0= originFeature.maxActiveRadiusOnWorkingDay0;
+
+
+        //maxActiveRadiusOnWorkingDay1
+        borderList = Arrays.asList(1.03,5.365,14.26,26.77,71.915,249.715);
+        formatedOriginFeature.maxActiveRadiusOnWorkingDay1= segmentFeature(originFeature.maxActiveRadiusOnWorkingDay1, borderList);
+
+
+        //avgActiveRadiusOnWeekend0
+        borderList = Arrays.asList(0.005,0.035,0.295,0.795,1.485,3.195,5.975,10.555,29.165);
+        formatedOriginFeature.avgActiveRadiusOnWeekend0= segmentFeature(originFeature.avgActiveRadiusOnWeekend0, borderList);
+        formatedOriginFeature.avgActiveRadiusOnWeekend0= originFeature.avgActiveRadiusOnWeekend0;
+
+        //avgActiveRadiusOnWeekend1
+        borderList = Arrays.asList(0.195,3.31,11.035,26.825,74.585);
+//        formatedOriginFeature.avgActiveRadiusOnWeekend1= segmentFeature(originFeature.avgActiveRadiusOnWeekend1, borderList);
+        formatedOriginFeature.avgActiveRadiusOnWeekend1= (originFeature.avgActiveRadiusOnWeekend1);
+
+        //maxActiveRadiusOnWeekend0
+        borderList = Arrays.asList(0.085,2.03,15.315,54.07);
+//        formatedOriginFeature.maxActiveRadiusOnWeekend0= segmentFeature(originFeature.maxActiveRadiusOnWeekend0, borderList);
+        formatedOriginFeature.maxActiveRadiusOnWeekend0= (originFeature.maxActiveRadiusOnWeekend0);
+
+
+        //maxActiveRadiusOnWeekend1
+        borderList = Arrays.asList(0.195,3.31,11.035,26.825,74.585);
+//        formatedOriginFeature.maxActiveRadiusOnWeekend1= segmentFeature(originFeature.maxActiveRadiusOnWeekend1, borderList);
+        formatedOriginFeature.maxActiveRadiusOnWeekend1= (originFeature.maxActiveRadiusOnWeekend1);
+
+
+
 
 
 
@@ -163,11 +194,11 @@ public class AnalysisFeature {
         formatedOriginFeature.avgActiveRadiusOnWorkingDay0 = originFeature.avgActiveRadiusOnWorkingDay0;
         formatedOriginFeature.avgActiveRadiusOnWorkingDay1 = originFeature.avgActiveRadiusOnWorkingDay1;
 //        formatedOriginFeature.maxActiveRadiusOnWorkingDay0 = originFeature.maxActiveRadiusOnWorkingDay0;
-        formatedOriginFeature.maxActiveRadiusOnWorkingDay1 = originFeature.maxActiveRadiusOnWorkingDay1;
-        formatedOriginFeature.avgActiveRadiusOnWeekend0 = originFeature.avgActiveRadiusOnWeekend0;
-        formatedOriginFeature.avgActiveRadiusOnWeekend1 = originFeature.avgActiveRadiusOnWeekend1;
-        formatedOriginFeature.maxActiveRadiusOnWeekend0 = originFeature.maxActiveRadiusOnWeekend0;
-        formatedOriginFeature.maxActiveRadiusOnWeekend1 = originFeature.maxActiveRadiusOnWeekend1;
+//        formatedOriginFeature.maxActiveRadiusOnWorkingDay1 = originFeature.maxActiveRadiusOnWorkingDay1;
+//        formatedOriginFeature.avgActiveRadiusOnWeekend0 = originFeature.avgActiveRadiusOnWeekend0;
+//        formatedOriginFeature.avgActiveRadiusOnWeekend1 = originFeature.avgActiveRadiusOnWeekend1;
+//        formatedOriginFeature.maxActiveRadiusOnWeekend0 = originFeature.maxActiveRadiusOnWeekend0;
+//        formatedOriginFeature.maxActiveRadiusOnWeekend1 = originFeature.maxActiveRadiusOnWeekend1;
         formatedOriginFeature.model = originFeature.model;
         formatedOriginFeature.allCity = originFeature.allCity;
 
