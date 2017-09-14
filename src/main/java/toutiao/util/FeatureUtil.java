@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import toutiao.bean.FeatureResult;
 import toutiao.bean.FormatedFeatureResult;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,7 +13,37 @@ import java.util.List;
  */
 public class FeatureUtil {
 
+    public static DecimalFormat dcmFmt = new DecimalFormat("0.00");
 
+
+    /**
+     * 将特征进行分段处理
+     * @param value
+     * @param borderList
+     */
+    public static String segmentFeature(String value,List<Double> borderList){
+        String result="0";
+        int size=borderList.size();
+        boolean isDone=false;
+        for (int i = 0; i < size; i++) {
+            if (Double.valueOf(value) < borderList.get(i)) {
+                if (i>0){
+                    result=dcmFmt.format((Double.valueOf(borderList.get(i))+Double.valueOf(borderList.get(i-1)))/2);
+                    isDone=true;
+                    break;
+                }else if (i==0){
+                    result=dcmFmt.format(Double.valueOf(borderList.get(i))/2);
+                    isDone=true;
+                    break;
+                }
+
+            }
+        }
+        if (!isDone){
+            result=String.valueOf(borderList.get(borderList.size()-1));
+        }
+        return result;
+    }
 
     /**
      * 将value根据给定边界值转换为向量

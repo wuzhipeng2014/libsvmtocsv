@@ -63,7 +63,7 @@ public class FormatedOriginFeature {
 
 
     public  String toCsv(){
-        String format = String.format("%s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s,%s,%s,%s,%s,%s, %s,%s,%s,%s,%s,%s, %s,%s,%s,%s,%s",
+        String format = String.format("%s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s",
                 keyid, label, activeDays, activeWeeks, activeDaysOfTopCity,
                 activeDaysOfEndCity, gender, age, platform, Joiner.on(",").skipNulls().join(citeNumVector),
                 Joiner.on(",").skipNulls().join(areaNumVector), shiftCitys0, shiftCitys1, shiftCitysOnWorkingDay0, shiftCitysOnWorkingDay1,
