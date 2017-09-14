@@ -29,12 +29,12 @@ public class AnalysisFeature {
         String inputFile = "/home/zhipengwu/secureCRT/part_origin_feature_20170822_09-07-2.txt";
         try {
             LineIterator lineIterator = FileUtils.lineIterator(new File(inputFile));
-            FileWriter fw_pos = new FileWriter(String.format("%s_pos.csv", inputFile));
-            FileWriter fw_neg = new FileWriter(String.format("%s_neg.csv", inputFile));
+//            FileWriter fw_pos = new FileWriter(String.format("%s_pos.csv", inputFile));
+//            FileWriter fw_neg = new FileWriter(String.format("%s_neg.csv", inputFile));
             FileWriter fw = new FileWriter(String.format("%s_all.csv", inputFile));
             String header = "lable,weekMax,weekMin,monthMax, monthMin,monthRatio\n";
-            fw_pos.append(header);
-            fw_neg.append(header);
+//            fw_pos.append(header);
+//            fw_neg.append(header);
 
             int count_neg = 0;
 
@@ -87,8 +87,8 @@ public class AnalysisFeature {
 
                 }
             }
-            fw_neg.close();
-            fw_pos.close();
+//            fw_neg.close();
+//            fw_pos.close();
             fw.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -115,8 +115,23 @@ public class AnalysisFeature {
         // 3. activeWeeks
         borderList = Arrays.asList(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5,
                 17.5, 19.5, 21.5, 23.5, 27.5);
-        String activeWeeks = segmentFeature(originFeature.activeWeeks, borderList);
-        formatedOriginFeature.activeWeeks = activeWeeks;
+        formatedOriginFeature.activeWeeks = segmentFeature(originFeature.activeWeeks, borderList);
+
+        //maxActiveRadiusOnWorkingDay0
+        borderList = Arrays.asList(1.03,4.14,12.76,25.66,71.135);
+        formatedOriginFeature.maxActiveRadiusOnWorkingDay0= segmentFeature(originFeature.maxActiveRadiusOnWorkingDay0, borderList);
+
+
+
+
+
+
+
+
+
+
+
+
 
         return originFeature;
 
@@ -127,7 +142,7 @@ public class AnalysisFeature {
         formatedOriginFeature.keyid = originFeature.keyid;
         formatedOriginFeature.label = originFeature.label;
         formatedOriginFeature.activeDays = originFeature.activeDays;
-        formatedOriginFeature.activeWeeks = originFeature.activeWeeks;
+//        formatedOriginFeature.activeWeeks = originFeature.activeWeeks;
         formatedOriginFeature.activeDaysOfTopCity = originFeature.activeDaysOfTopCity;
         formatedOriginFeature.activeDaysOfEndCity = originFeature.activeDaysOfEndCity;
         formatedOriginFeature.gender = originFeature.gender;
@@ -147,7 +162,7 @@ public class AnalysisFeature {
         formatedOriginFeature.maxActiveRadius1 = originFeature.maxActiveRadius1;
         formatedOriginFeature.avgActiveRadiusOnWorkingDay0 = originFeature.avgActiveRadiusOnWorkingDay0;
         formatedOriginFeature.avgActiveRadiusOnWorkingDay1 = originFeature.avgActiveRadiusOnWorkingDay1;
-        formatedOriginFeature.maxActiveRadiusOnWorkingDay0 = originFeature.maxActiveRadiusOnWorkingDay0;
+//        formatedOriginFeature.maxActiveRadiusOnWorkingDay0 = originFeature.maxActiveRadiusOnWorkingDay0;
         formatedOriginFeature.maxActiveRadiusOnWorkingDay1 = originFeature.maxActiveRadiusOnWorkingDay1;
         formatedOriginFeature.avgActiveRadiusOnWeekend0 = originFeature.avgActiveRadiusOnWeekend0;
         formatedOriginFeature.avgActiveRadiusOnWeekend1 = originFeature.avgActiveRadiusOnWeekend1;
