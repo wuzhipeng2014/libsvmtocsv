@@ -56,18 +56,18 @@ public class AnalysisFeature {
 
                         // ===========================特征进行分段处理===========================================
 
-                         FormatedOriginFeature formatedOriginFeature=new FormatedOriginFeature();
-                         // 将正负例差异较大的特征 分段 转换位向量
-                         OriginFeature originFeature = convertMajorFeatruretoVector(split, formatedOriginFeature);
-                         //将其他向量拷贝到FormatedOriginFeature
-                         cloneFeaturetoFormatedOriginFeature(originFeature,formatedOriginFeature);
+                        FormatedOriginFeature formatedOriginFeature = new FormatedOriginFeature();
+                        // 将正负例差异较大的特征 分段 转换位向量
+                        OriginFeature originFeature = convertMajorFeatruretoVector(split, formatedOriginFeature);
+                        // 将其他向量拷贝到FormatedOriginFeature
+                        cloneFeaturetoFormatedOriginFeature(originFeature, formatedOriginFeature);
 
-                         //将formatedOriginFeature 转换为csv文件
-                         String join = formatedOriginFeature.toCsv();
+                        // 将formatedOriginFeature 转换为csv文件
+                        String join = formatedOriginFeature.toCsv();
 
                         // ==================================================================================
 
-//                        String join = Joiner.on(",").skipNulls().join(split);
+                        // String join = Joiner.on(",").skipNulls().join(split);
 
                         fw.append(join + "\n");
                         fw.flush();
@@ -112,13 +112,11 @@ public class AnalysisFeature {
         // formatedOriginFeature.areaNumVector = areaNumVector;
         formatedOriginFeature.areaNumVector = Arrays.asList(originFeature.areaNum);
 
-
-        //3. activeWeeks
-        borderList = Arrays.asList(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5,10.5,11.5,12.5,13.5,14.5,15.5,17.5,19.5,21.5,23.5,27.5);
-        String activeWeeks = segmentFeature(originFeature.activeWeeks,
-                borderList);
-        formatedOriginFeature.activeWeeks=activeWeeks;
-
+        // 3. activeWeeks
+        borderList = Arrays.asList(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5,
+                17.5, 19.5, 21.5, 23.5, 27.5);
+        String activeWeeks = segmentFeature(originFeature.activeWeeks, borderList);
+        formatedOriginFeature.activeWeeks = activeWeeks;
 
         return originFeature;
 
