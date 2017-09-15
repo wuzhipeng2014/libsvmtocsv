@@ -101,9 +101,9 @@ public class AnalysisFeature {
         List<Double> borderList = Lists.newArrayList();
 
         // 1.citeNum
-        // List<Double> borderList = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
-        // List<String> citeNumVector = convertoVector(originFeature.citeNum, borderList);
-        // formatedOriginFeature.citeNumVector = citeNumVector;
+         borderList = Arrays.asList(0.085,0.64,2.195,4.255,6.755,13.205,19.82,26.77,223.475);
+//         String citeNumVector = segmentFeature(originFeature.citeNum, borderList);
+//         formatedOriginFeature.citeNumVector = Arrays.asList(citeNumVector);
         formatedOriginFeature.citeNumVector = Arrays.asList(originFeature.citeNum);
 
         // 2.areaNum
@@ -149,6 +149,11 @@ public class AnalysisFeature {
 //        formatedOriginFeature.maxActiveRadiusOnWeekend1= segmentFeature(originFeature.maxActiveRadiusOnWeekend1, borderList);
         formatedOriginFeature.maxActiveRadiusOnWeekend1= (originFeature.maxActiveRadiusOnWeekend1);
 
+        //shiftCitys0
+        borderList = Arrays.asList(0.005,0.065,0.155,0.575,1.065,1.695,2.635,3.365,14.025,19.195,34.935,84.735);
+        formatedOriginFeature.shiftCitys0= segmentFeature(originFeature.shiftCitys0, borderList);
+
+
 
 
 
@@ -182,7 +187,7 @@ public class AnalysisFeature {
         formatedOriginFeature.platform = originFeature.platform;
         // formatedOriginFeature.citeNum=originFeature.citeNum;
         // formatedOriginFeature.areaNum=originFeature.areaNum;
-        formatedOriginFeature.shiftCitys0 = originFeature.shiftCitys0;
+//        formatedOriginFeature.shiftCitys0 = originFeature.shiftCitys0;
         formatedOriginFeature.shiftCitys1 = originFeature.shiftCitys1;
         formatedOriginFeature.shiftCitysOnWorkingDay0 = originFeature.shiftCitysOnWorkingDay0;
         formatedOriginFeature.shiftCitysOnWorkingDay1 = originFeature.shiftCitysOnWorkingDay1;
