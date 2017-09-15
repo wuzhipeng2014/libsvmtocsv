@@ -41,12 +41,22 @@ public class MergeCsvFile {
         loadPart2Feature(file2);
         joinFile1(file1,outfile);
 
+        //step2.1 将用户标签特征合并
+        part2FeatureMap.clear();
+        String userLabelFile="/home/zhipengwu/secureCRT/std_train_hotel_label_feature_20170822_09-14-1.txt";
+        String outfile2="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_feature_20170822_2.txt.csv";
+        loadPart2Feature(userLabelFile);
+        joinFile1(outfile,outfile2);
+
+
+
+
         //step3. 原始特征和我的新特征合并
         part2FeatureMap.clear();
         String newFeature="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_20170822.txt.csv";
         String resultFile="/home/zhipengwu/secureCRT/toutiao_hotel_combine_feature_20170822.csv";
         loadPart2Feature(newFeature);
-        joinFile(outfile,resultFile);
+        joinFile(outfile2,resultFile);
 
     }
 

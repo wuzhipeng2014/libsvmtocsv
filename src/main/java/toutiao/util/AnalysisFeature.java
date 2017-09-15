@@ -130,7 +130,7 @@ public class AnalysisFeature {
 
         //avgActiveRadiusOnWeekend0
         borderList = Arrays.asList(0.005,0.035,0.295,0.795,1.485,3.195,5.975,10.555,29.165);
-        formatedOriginFeature.avgActiveRadiusOnWeekend0= segmentFeature(originFeature.avgActiveRadiusOnWeekend0, borderList);
+//        formatedOriginFeature.avgActiveRadiusOnWeekend0= segmentFeature(originFeature.avgActiveRadiusOnWeekend0, borderList);
         formatedOriginFeature.avgActiveRadiusOnWeekend0= originFeature.avgActiveRadiusOnWeekend0;
 
         //avgActiveRadiusOnWeekend1
@@ -139,7 +139,7 @@ public class AnalysisFeature {
         formatedOriginFeature.avgActiveRadiusOnWeekend1= (originFeature.avgActiveRadiusOnWeekend1);
 
         //maxActiveRadiusOnWeekend0
-        borderList = Arrays.asList(0.085,2.03,15.315,54.07);
+        borderList = Arrays.asList(0.085,0.35,2.03,5.645,15.315,30.275,54.07,75.5,100.5,150.5,200.18);
 //        formatedOriginFeature.maxActiveRadiusOnWeekend0= segmentFeature(originFeature.maxActiveRadiusOnWeekend0, borderList);
         formatedOriginFeature.maxActiveRadiusOnWeekend0= (originFeature.maxActiveRadiusOnWeekend0);
 
