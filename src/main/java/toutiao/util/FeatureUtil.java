@@ -344,6 +344,7 @@ public class FeatureUtil {
         formatedFeatureResult.platform = featureResult.platform;
         formatedFeatureResult.shiftCityname = featureResult.shiftCityname;
         formatedFeatureResult.residentCity = featureResult.residentCity;
+        formatedFeatureResult.avgGDP=featureResult.avgGDP;
         formatedFeatureResult.age = featureResult.age;
         formatedFeatureResult.toutiaoActiveDayNum = featureResult.toutiaoActiveDayNum;
         formatedFeatureResult.weekendShiftCityCountRatio = featureResult.weekendShiftCityCountRatio;

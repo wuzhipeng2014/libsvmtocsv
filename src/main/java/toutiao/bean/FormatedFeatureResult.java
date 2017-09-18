@@ -38,6 +38,8 @@ public class FormatedFeatureResult {
 
     public String shiftCityname;
     public String residentCity;
+    public String avgGDP;
+
 
     // 节假日|工作日 移动区域个数比值
     public List<String> shiftAreaNumRatioVector;
@@ -132,6 +134,9 @@ public class FormatedFeatureResult {
 
         //单天移动区域个数 中值
         result.addAll(avgShiftAreaNumVector);
+
+        //常住地城市人均GDP
+        result.add(avgGDP);
 
 
         // 2. 工作日/节假日跨市移动次数最大比值

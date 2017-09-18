@@ -26,6 +26,7 @@ public class FeatureResult {
     public String platform;
     public String shiftCityname;
     public String residentCity;
+    public String avgGDP;
     // ===================20170829============================
     // 工作日跨市移动次数
     public String workdayShiftCityCount;

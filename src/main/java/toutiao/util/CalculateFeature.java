@@ -34,6 +34,7 @@ public class CalculateFeature {
     public static DecimalFormat dcmFmt = new DecimalFormat("0.00");
     public static Map<String, String> modelPriceMap = Maps.newHashMap();
     public static Map<String, String> cityLevelMap = Maps.newHashMap();
+    public static Map<String, String> avgDGPMap = Maps.newHashMap();
 
     public static String defaultValue = "0";
     public static int maxCityFrequency=1;
@@ -257,6 +258,15 @@ public class CalculateFeature {
         if (Strings.isNullOrEmpty(cityLevel)){
             cityLevel="4";
         }
+        //常住地城市人均gdp
+        String avgGDP = avgDGPMap.get(residentCity);
+        if (Strings.isNullOrEmpty(avgGDP)){
+            avgGDP="20";
+        }
+        featureResult.avgGDP=avgGDP;
+
+
+
         featureResult.residentCityLevel=cityLevel;
     }
 
@@ -471,6 +481,32 @@ public class CalculateFeature {
                         String city = split[0];
                         String level = split[1];
                         cityLevelMap.put(city, level);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    //加载常住地城市人均gdp
+    public static void loadAvgGDP(String fileName){
+        try {
+            LineIterator lineIterator = FileUtils.lineIterator(new File(fileName));
+            while (lineIterator.hasNext()) {
+                String line = lineIterator.nextLine();
+                if (!Strings.isNullOrEmpty(line)) {
+                    String[] split = line.split("\t");
+                    if (split.length == 2) {
+                        String city = split[0];
+                        String gdp = split[1];
+                        if (isNum(gdp)){
+                            gdp=String.valueOf(Integer.valueOf(gdp)/1000);
+                            city=city.substring(0,city.length()-1);
+                            avgDGPMap.put(city, gdp);
+                        }
+
                     }
                 }
             }
