@@ -11,6 +11,7 @@ import toutiao.bean.FormatedFeatureResult;
 import toutiao.bean.ToutiaoUserBehavior;
 import toutiao.util.CalculateFeature;
 import toutiao.util.FeatureUtil;
+import toutiao.util.UserBehaviorAnalysis;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -57,6 +58,14 @@ public class ToutiaoFeatureMining {
                 FeatureResult featureResult = new FeatureResult();
                 ToutiaoUserBehavior toutiaoUserBehavior = UserHistoryInfo.GSON.fromJson(line,
                         ToutiaoUserBehavior.class);
+
+                int predictMissShiftCityNum = new UserBehaviorAnalysis().predictMissShiftCityNum(toutiaoUserBehavior);
+                if (predictMissShiftCityNum>0){
+                    System.out.println();
+                }
+                //todo 预测的丢失的城市移动数目
+                featureResult.predictMissShiftCityNum=String.valueOf(predictMissShiftCityNum);
+
                 CalculateFeature.getAvgShiftCityNum(toutiaoUserBehavior, featureResult);
                 CalculateFeature.getAge(toutiaoUserBehavior, featureResult);
                 CalculateFeature.getPhoneLevel(toutiaoUserBehavior, featureResult);
@@ -120,5 +129,7 @@ public class ToutiaoFeatureMining {
 
         return result;
     }
+
+
 
 }

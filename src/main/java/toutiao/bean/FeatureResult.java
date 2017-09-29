@@ -27,6 +27,7 @@ public class FeatureResult {
     public String shiftCityname;
     public String residentCity;
     public String avgGDP;
+    public String spendingPower;
     // ===================20170829============================
     // 工作日跨市移动次数
     public String workdayShiftCityCount;
@@ -54,6 +55,9 @@ public class FeatureResult {
     public String avgWeekendShiftAreaNum;
     //节假日|工作日 移动区域个数比值
     public String shiftAreaNumRatio;
+
+    //预测的丢失的城市移动数目
+    public String predictMissShiftCityNum;
 
 
     public static String header = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",

@@ -26,20 +26,15 @@ public class MergeCsvFile {
 
 
         //step2. 原始特征和琳姐的特征合并
-//        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_20170822.txt.csv";
         String file1="/home/zhipengwu/secureCRT/part_origin_feature_20170822_09-07-2.txt_all.csv";
-//        String file2="/home/zhipengwu/secureCRT/std_train_hotel_feature_20170822.txt";
         String file2="/home/zhipengwu/secureCRT/std_train_hotel_feature_20170822_09-08-1.txt";
-
         String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_train_feature_20170822.txt.csv";
-
-//        String file1="/home/zhipengwu/secureCRT/part_origin_feature_20170822_09-07-2.txt_all.csv";
-////        String file1="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_20170822.txt.csv";
-//        String file2="/home/zhipengwu/secureCRT/std_test_hotel_feature_20170822.txt";
-//        String outfile="/home/zhipengwu/secureCRT/toutiao_hotel_behavior_test_feature_20170822.txt.csv";
-
+        part2FeatureMap.clear();
+        //todo 不合并琳姐的特征
         loadPart2Feature(file2);
         joinFile1(file1,outfile);
+
+
 
         //step2.1 将用户标签特征合并
         part2FeatureMap.clear();
@@ -113,7 +108,12 @@ public class MergeCsvFile {
                 String keyid=split1[0];
                 String[] split2 =null;
                 String line2 = part2FeatureMap.get(keyid);
-                String[] resultPart2=null;
+
+                //todo 抛弃未匹配的用户
+                if (Strings.isNullOrEmpty(line2)){
+                    continue;
+                }
+                String[] resultPart2=new String[0];
                 if (!Strings.isNullOrEmpty(line2)){
                  split2 = line2.split("\t");
                     //todo
@@ -182,7 +182,7 @@ public class MergeCsvFile {
                 String keyid=split1[0];
                 String[] split2 =null;
                 String line2 = part2FeatureMap.get(keyid);
-                String[] resultPart2=null;
+                String[] resultPart2=new String[0];
                 if (!Strings.isNullOrEmpty(line2)){
                     split2 = line2.split("\t");
                     //todo

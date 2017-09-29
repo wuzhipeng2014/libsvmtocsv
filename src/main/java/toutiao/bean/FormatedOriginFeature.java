@@ -1,6 +1,7 @@
 package toutiao.bean;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import toutiao.util.FeatureUtil;
 
 import java.util.Arrays;
@@ -63,6 +64,8 @@ public class FormatedOriginFeature {
 
 
     public  String toCsv(){
+        //todo 移除citenum
+        citeNumVector= Lists.newArrayList();
         String format = String.format("%s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s",
                 keyid, label, activeDays, activeWeeks, activeDaysOfTopCity,
                 activeDaysOfEndCity, gender, age, platform, Joiner.on(",").skipNulls().join(citeNumVector),

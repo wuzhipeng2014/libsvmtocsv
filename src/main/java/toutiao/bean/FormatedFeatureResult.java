@@ -2,6 +2,7 @@ package toutiao.bean;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import toutiao.util.AnalysisFeature;
 
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class FormatedFeatureResult {
     public String shiftCityname;
     public String residentCity;
     public String avgGDP;
+    public String spendingPower;
 
 
     // 节假日|工作日 移动区域个数比值
@@ -72,6 +74,10 @@ public class FormatedFeatureResult {
     public List<String> avgWorkdayShiftAreaNumVector;
 
     public List<String> avgWeekendShiftAreaNumVector;
+
+
+    //预测的丢失的城市移动数目
+    public String predictMissShiftCityNum;
 
     @Override
     public String toString() {
@@ -124,19 +130,50 @@ public class FormatedFeatureResult {
      */
     public String newFeatureToString() {
         List<String> result = Lists.newArrayList();
+
+        //todo 新标签
+        String newLabel = AnalysisFeature.newLableMap.get(keyid);
+
+        //todo 过滤掉新标签中不是正例的用户
+        if (newLabel.equalsIgnoreCase("0")&&Lable.equalsIgnoreCase("1")){
+            return null;
+        }
+
+        //todo 如果是正例用户,并且其出现过的城市个数为1,将其加1
+//        try {
+//            if (newLabel.equalsIgnoreCase("1") && shiftCityTotalNumVector.get(0).equals("1")) {
+//                shiftCityTotalNumVector = Arrays.asList("2");
+//            }
+//        }catch (Exception e){
+//            System.out.println();
+//        }
+
+
         result.add(keyid);
-        result.add(Lable);
+        result.add(newLabel);
         result.addAll(phoneLevelVector);
         result.addAll(residentCityLevelVector);
         result.addAll(shfitCityTotalHeatVector);
+
+
         // 单天移动区域个数比值
         result.addAll(shiftAreaNumRatioVector);
 
         //单天移动区域个数 中值
         result.addAll(avgShiftAreaNumVector);
 
+
+        //出现过的城市个数
+        result.addAll(shiftCityTotalNumVector);
+
         //常住地城市人均GDP
-        result.add(avgGDP);
+//        result.add(avgGDP);
+
+        //常住地之外城市消费能力
+//        result.add(spendingPower);
+
+        //预测的丢失城市值
+//        result.add(predictMissShiftCityNum);
 
 
         // 2. 工作日/节假日跨市移动次数最大比值
@@ -144,6 +181,14 @@ public class FormatedFeatureResult {
         // 3. 最大活动半径/平均活动半径 比值
 
         return Joiner.on("\t").skipNulls().join(result);
+
+    }
+
+    public void posNegFeatureCmp(){
+        String pos_file="/home/zhipengwu/secureCRT/pos_feature_result_file_20170918.txt";
+        String neg_file="/home/zhipengwu/secureCRT/neg_feature_result_file_20170918.txt";
+
+
 
     }
 }

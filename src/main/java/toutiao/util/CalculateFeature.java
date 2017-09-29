@@ -43,7 +43,9 @@ public class CalculateFeature {
 
     // I1.移动城市城市总数
     public static void getShiftCityTotalNum(ToutiaoUserBehavior toutiaoUserBehavior, FeatureResult featureResult) {
-        featureResult.shiftCityTotalNum = String.valueOf(toutiaoUserBehavior.cites.size());
+        int size = toutiaoUserBehavior.cites.size();
+        featureResult.shiftCityTotalNum=String.valueOf(size);
+//        featureResult.shiftCityTotalNum=String.valueOf(size+Integer.valueOf(featureResult.predictMissShiftCityNum));
     }
 
     // I2.一天(相邻两天)内移动城市个数 (隔天)平均值(中值), I3.最大值, I5.及城市间移动的总次数
@@ -264,6 +266,23 @@ public class CalculateFeature {
             avgGDP="20";
         }
         featureResult.avgGDP=avgGDP;
+        //常住地之外城市消费能力
+        int spendingPower=0;
+        for (String cityName : cites.keySet()) {
+            if (!Strings.isNullOrEmpty(cityName)&&!cityName.equalsIgnoreCase(residentCity)){
+                String cityGdp = avgDGPMap.get(cityName);
+                if (Strings.isNullOrEmpty(cityGdp)){
+                    cityGdp="20";
+                }
+                if (isNum(cityGdp)){
+                    spendingPower+=Integer.valueOf(cityGdp);
+                }
+            }
+        }
+
+        featureResult.spendingPower=String.valueOf(spendingPower+(Integer.valueOf(featureResult.predictMissShiftCityNum)*30));
+
+
 
 
 

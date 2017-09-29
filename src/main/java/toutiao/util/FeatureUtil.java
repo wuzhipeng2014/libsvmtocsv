@@ -345,6 +345,7 @@ public class FeatureUtil {
         formatedFeatureResult.shiftCityname = featureResult.shiftCityname;
         formatedFeatureResult.residentCity = featureResult.residentCity;
         formatedFeatureResult.avgGDP=featureResult.avgGDP;
+        formatedFeatureResult.spendingPower=featureResult.spendingPower;
         formatedFeatureResult.age = featureResult.age;
         formatedFeatureResult.toutiaoActiveDayNum = featureResult.toutiaoActiveDayNum;
         formatedFeatureResult.weekendShiftCityCountRatio = featureResult.weekendShiftCityCountRatio;
@@ -352,6 +353,7 @@ public class FeatureUtil {
         // formatedFeatureResult.shiftAreaNumRatio=featureResult.shiftAreaNumRatio;
         formatedFeatureResult.weekendShiftAreaNum = featureResult.weekendShiftAreaNum;
         formatedFeatureResult.workdayShiftAreaNum = featureResult.workdayShiftAreaNum;
+        formatedFeatureResult.predictMissShiftCityNum=featureResult.predictMissShiftCityNum;
     }
 
     public static void main(String[] args) {

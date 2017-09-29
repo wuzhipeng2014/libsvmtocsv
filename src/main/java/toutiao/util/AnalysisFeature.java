@@ -3,6 +3,7 @@ package toutiao.util;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.junit.Test;
@@ -15,18 +16,33 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static toutiao.util.FeatureUtil.segmentFeature;
 
 /**
  * Created by zhipengwu on 17-9-6.
+ * 将琳姐生成的原始特征进行特殊处理
  */
 public class AnalysisFeature {
     public static DecimalFormat dcmFmt = new DecimalFormat("0.00");
 
+    public static Map<String,String> newLableMap=Maps.newHashMap();
+    static {
+        String newLableFile="/home/zhipengwu/secureCRT/new_labeled_train_20170919.txt";
+
+        loadNewLabelMap(newLableFile);
+    }
+
     public static void main(String[] args) {
+//        newLableMap= Maps.newHashMap();
+
         // String inputFile = "/home/zhipengwu/secureCRT/std_test_feature_20170822_20170906.txt";
         String inputFile = "/home/zhipengwu/secureCRT/part_origin_feature_20170822_09-07-2.txt";
+
+//        String newLableFile="/home/zhipengwu/secureCRT/new_labeled_train_20170919.txt";
+//        loadNewLabelMap(newLableFile);
+
         try {
             LineIterator lineIterator = FileUtils.lineIterator(new File(inputFile));
 //            FileWriter fw_pos = new FileWriter(String.format("%s_pos.csv", inputFile));
@@ -48,6 +64,13 @@ public class AnalysisFeature {
                     if (length > 5) {
                         String keyId = split[0];
                         String lable = split[1];
+
+                        //todo 标签替换(6月之后有订单的为正例)
+                        String newLabel = newLableMap.get(keyId);
+                        if (!Strings.isNullOrEmpty(newLabel)){
+                            split[1]=newLabel;
+                        }
+
 
                         int len = split.length;
                         // split[0]=null; //keyid
@@ -224,6 +247,22 @@ public class AnalysisFeature {
             return String.valueOf(dcmFmt.format(Double.valueOf(max) / Double.valueOf(min)));
         } else {
             return max;
+        }
+    }
+
+
+    public static void loadNewLabelMap(String fileName){
+        try {
+            LineIterator lineIterator = FileUtils.lineIterator(new File(fileName));
+            while (lineIterator.hasNext()){
+                String line = lineIterator.nextLine();
+                String[] split = line.split("\t");
+                if (split.length==2) {
+                    newLableMap.put(split[0], split[1]);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
