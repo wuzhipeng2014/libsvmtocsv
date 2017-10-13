@@ -2,11 +2,6 @@ package toutiao.Feature.Bean;
 
 import com.google.common.base.Strings;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static toutiao.util.FeatureUtil.segmentFeature;
-
 /**
  * Created by zhipengwu on 17-10-11.
  */
@@ -86,10 +81,15 @@ public class BasicFeature {
         basicFeature.phoneLevel=Double.valueOf(split[22]);
         basicFeature.residentCityLevel=Integer.valueOf(split[23]);
 
+        //特征进行分段处理
         // 3. activeWeeks
-       List<Double> borderList = Arrays.asList(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5,
-                17.5, 19.5, 21.5, 23.5, 27.5,28.5,29.5,30.5,31.5);
-        basicFeature.activeWeeks =Double.valueOf(segmentFeature(String.valueOf(basicFeature.activeWeeks), borderList));
+//       List<Double> borderList = Arrays.asList(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5,
+//                17.5, 19.5, 21.5, 23.5, 27.5,28.5,29.5,30.5,31.5);
+//        basicFeature.activeWeeks =Double.valueOf(segmentFeature(String.valueOf(basicFeature.activeWeeks), borderList));
+//
+//        //averageWeekshiftCities //周平均移动城市次数
+//        borderList = Arrays.asList(0.005,0.065,0.155,0.575,1.065,1.695,2.635,3.365,14.025,19.195,34.935,84.735);
+//        basicFeature.averageWeekshiftCities= Double.valueOf(segmentFeature(String.valueOf(basicFeature.averageWeekshiftCities), borderList));
 
 
 
