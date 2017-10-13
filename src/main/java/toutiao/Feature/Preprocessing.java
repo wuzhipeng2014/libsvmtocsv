@@ -13,9 +13,8 @@ import java.io.IOException;
  */
 public class Preprocessing {
     public static void main(String[] args) {
-        String basicFeatureIntputFile = "/home/zhipengwu/secureCRT/hotel_feature_20170926_10-10_01.txt";
-        String basicFeatureOutputFile = "/home/zhipengwu/secureCRT/hotel_feature_20170926_10-10_01.csv";
-        String headerName = "Label, activeDays, activeDaysOfTopCity, cityNum, areaNum, shiftAreas, weekMaxshiftAreas, monthMaxshiftAreas, averageWeekshiftAreas, averageMonthshiftAreas, shiftAreaNumRatio, midShiftAreaNum, phoneLevel, residentCityLevel";
+        String basicFeatureIntputFile = "/home/zhipengwu/secureCRT/hotel_feature_20170926_10-12_01.txt";
+        String basicFeatureOutputFile = "/home/zhipengwu/secureCRT/hotel_feature_20170926_10-12_01.csv";
 
         String header = "";
         boolean firstLine = true;
